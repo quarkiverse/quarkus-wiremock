@@ -1,0 +1,12 @@
+---
+artifact: ${project.groupId}:${project.artifactId}:${project.version}
+name: Wiremock Dev
+#description: Do something useful.
+metadata:
+  keywords:
+    - wiremock-dev
+  categories:
+    - "miscellaneous"
+  status: "preview"
+  config:
+    - "quarkus.wiremock.dev.*"
