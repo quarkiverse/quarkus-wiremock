@@ -14,7 +14,7 @@ public class WiremockDevDevModeTest {
     @RegisterExtension
     static final QuarkusDevModeTest devModeTest = new QuarkusDevModeTest()
             .setBuildSystemProperty("quarkus.wiremock.dev.enabled", "true")
-        .setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class));
+            .setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class));
 
     @Test
     public void writeYourOwnDevModeTest() {

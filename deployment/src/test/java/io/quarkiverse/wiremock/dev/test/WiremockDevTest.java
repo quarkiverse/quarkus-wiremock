@@ -1,25 +1,38 @@
 package io.quarkiverse.wiremock.dev.test;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Observes;
+
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
+import io.quarkus.runtime.StartupEvent;
 import io.quarkus.test.QuarkusUnitTest;
 
 public class WiremockDevTest {
 
-    // Start unit test with your extension loaded
     @RegisterExtension
-    static final QuarkusUnitTest unitTest = new QuarkusUnitTest().overrideConfigKey("quarkus.wiremock.dev.enabled", "true")
-        .setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class));
+    static final QuarkusUnitTest unitTest = new QuarkusUnitTest().withConfigurationResource("application.properties")
+            .setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class).addClasses(DevBean.class));
 
     @Test
-    public void writeYourOwnUnitTest() {
-        // Write your unit tests here - see the testing extension guide https://quarkus.io/guides/writing-extensions#testing-extensions for more information
-//        JavaArchive archive = unitTest.getArchiveProducer().get();
-//
-        Assertions.assertTrue(true, "Add some assertions to " + getClass().getName());
+    void buildTimeRunTimeConfig() {
+        // A combination of QuarkusUnitTest and QuarkusProdModeTest tests ordering may mess with the port leaving it in
+        // 8081 and QuarkusDevModeTest does not change to the right port.
+        //        RestAssured.port = -1;
+        //
+        //        RestAssured.when().get("http://localhost:8081/application").then()
+        //                .statusCode(200)
+        //                .body(is("my-app"));
+    }
+
+    @ApplicationScoped
+    public static class DevBean {
+
+        public void register(@Observes StartupEvent ev) {
+
+        }
     }
 }

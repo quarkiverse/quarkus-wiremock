@@ -1,25 +1,27 @@
 package io.quarkiverse.wiremock.deployment;
 
-import com.github.tomakehurst.wiremock.WireMockServer;
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
-import io.quarkus.deployment.annotations.BuildStep;
-import io.quarkus.deployment.builditem.*;
-import io.quarkus.deployment.builditem.DevServicesResultBuildItem.RunningDevService;
-import io.quarkus.runtime.LaunchMode;
-import org.jboss.logging.Logger;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
+import org.jboss.logging.Logger;
 
-class WiremockDevProcessor {
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+
+import io.quarkus.deployment.annotations.BuildStep;
+import io.quarkus.deployment.builditem.*;
+import io.quarkus.deployment.builditem.DevServicesResultBuildItem.RunningDevService;
+import io.quarkus.runtime.LaunchMode;
+
+class QuarkusWireMockDevProcessor {
 
     private static final String FEATURE = "wiremock";
     private static final String DEV_SERVICE_NAME = "wiremock-service";
-    private static final Logger LOGGER = Logger.getLogger(WiremockDevProcessor.class);
+    private static final Logger LOGGER = Logger.getLogger(QuarkusWireMockDevProcessor.class);
     static volatile RunningDevService devService;
     static volatile WireMockServer server;
 
@@ -30,9 +32,9 @@ class WiremockDevProcessor {
 
     @BuildStep(onlyIf = IsEnabled.class)
     DevServicesResultBuildItem setup(LaunchModeBuildItem launchMode,
-                                     LiveReloadBuildItem liveReload,
-                                     CuratedApplicationShutdownBuildItem shutdown,
-                                     WireMockDevConfig config) {
+            LiveReloadBuildItem liveReload,
+            CuratedApplicationShutdownBuildItem shutdown,
+            QuarkusWireMockConfig config) {
 
         if (!liveReload.isLiveReload()) {
             Runnable closeTask = () -> {
@@ -50,7 +52,7 @@ class WiremockDevProcessor {
             return devService.toBuildItem();
         }
 
-        if (devService != null){
+        if (devService != null) {
             return devService.toBuildItem();
         }
 
@@ -64,9 +66,10 @@ class WiremockDevProcessor {
         }
 
     }
-    private RunningDevService startWireMock(WireMockDevConfig config) {
 
-        LOGGER.debug("Starting WireMockServer with port [" + config.port + "] " + "and path [" + config.path + "]"   );
+    private RunningDevService startWireMock(QuarkusWireMockConfig config) {
+
+        LOGGER.debug("Starting WireMockServer with port [" + config.port + "] " + "and path [" + config.path + "]");
 
         WireMockConfiguration configuration = options()
                 .port(config.port)
@@ -80,8 +83,7 @@ class WiremockDevProcessor {
                 return new RunningDevService(DEV_SERVICE_NAME,
                         null,
                         server::stop,
-                        prepareConfiguration(config)
-                );
+                        prepareConfiguration(config));
             } catch (Throwable ex) {
                 throw new RuntimeException(ex);
             }
@@ -90,11 +92,11 @@ class WiremockDevProcessor {
         return supplier.get();
     }
 
-    private Map<String, String> prepareConfiguration(WireMockDevConfig config){
+    private Map<String, String> prepareConfiguration(QuarkusWireMockConfig config) {
         return new HashMap<>();
     }
 
-    private void shutdownDevService(){
+    private void shutdownDevService() {
         try {
             devService.close();
         } catch (Throwable e) {
@@ -104,10 +106,12 @@ class WiremockDevProcessor {
             server = null;
         }
     }
+
     public static class IsEnabled implements BooleanSupplier {
-        WireMockDevConfig config;
+        QuarkusWireMockConfig config;
+
         public boolean getAsBoolean() {
-            if (config.enabled){
+            if (config.enabled) {
                 return true;
             } else {
                 return false;

@@ -3,11 +3,11 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>io.quarkiverse</groupId>
-    <artifactId>wiremock-parent</artifactId>
+    <groupId>io.quarkiverse.wiremock</groupId>
+    <artifactId>quarkus-wiremock-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
-  <artifactId>wiremock-deployment</artifactId>
+  <artifactId>quarkus-wiremock-deployment</artifactId>
   <name>Wiremock - Deployment</name>
   <dependencies>
     <dependency>
@@ -15,13 +15,27 @@
       <artifactId>quarkus-arc-deployment</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.quarkiverse</groupId>
-      <artifactId>wiremock</artifactId>
+      <groupId>io.quarkiverse.wiremock</groupId>
+      <artifactId>quarkus-wiremock</artifactId>
       <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.github.tomakehurst</groupId>
+      <artifactId>wiremock-jre8</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-junit5-internal</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-resteasy-reactive-deployment</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.rest-assured</groupId>
+      <artifactId>rest-assured</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>
