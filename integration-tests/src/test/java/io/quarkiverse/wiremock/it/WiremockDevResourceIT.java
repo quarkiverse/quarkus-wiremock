@@ -1,4 +1,4 @@
-package io.quarkiverse.wiremock.dev.it;
+package io.quarkiverse.wiremock.it;
 
 import io.quarkus.test.junit.QuarkusIntegrationTest;
 
