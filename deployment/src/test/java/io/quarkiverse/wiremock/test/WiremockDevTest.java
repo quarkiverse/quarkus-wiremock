@@ -1,4 +1,4 @@
-package io.quarkiverse.wiremock.dev.test;
+package io.quarkiverse.wiremock.test;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;

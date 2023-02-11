@@ -1,4 +1,4 @@
-package io.quarkiverse.wiremock.dev.test;
+package io.quarkiverse.wiremock.test;
 
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
@@ -13,7 +13,6 @@ public class WiremockDevDevModeTest {
     // Start hot reload (DevMode) test with your extension loaded
     @RegisterExtension
     static final QuarkusDevModeTest devModeTest = new QuarkusDevModeTest()
-            .setBuildSystemProperty("quarkus.wiremock.dev.enabled", "true")
             .setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class));
 
     @Test

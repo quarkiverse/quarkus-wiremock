@@ -13,6 +13,8 @@ import io.quarkiverse.wiremock.test.InjectWireMock;
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Assertions;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
+
 @QuarkusTest
 @QuarkusTestResource(WireMockServerTestResource.class)
 public class WiremockDevResourceTest {
@@ -23,6 +25,10 @@ public class WiremockDevResourceTest {
     @Test
     public void testHelloEndpoint() {
         Assertions.assertNotNull(wiremock);
+        wiremock.register(
+                get(urlEqualTo("/wiremock-dev")).willReturn(aResponse().withStatus(200).withBody("Hello wiremock-dev"))
+        );
+
         given()
                 .when().get("/wiremock-dev")
                 .then()
