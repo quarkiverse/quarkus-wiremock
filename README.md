@@ -11,7 +11,7 @@ Afterwards add the following dependency to your pom.xml.
 <dependency>
   <groupId>io.quarkiverse</groupId>
   <artifactId>wiremock-dev</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>0.0.1-SNAPSHOT</version>
 </dependency>
 ```
 

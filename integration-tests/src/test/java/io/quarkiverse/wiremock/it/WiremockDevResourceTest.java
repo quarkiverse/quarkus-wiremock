@@ -1,19 +1,18 @@
 package io.quarkiverse.wiremock.it;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.is;
 
-import io.quarkiverse.wiremock.test.WireMockServerTestResource;
-import io.quarkus.test.common.QuarkusTestResource;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 
 import io.quarkiverse.wiremock.test.InjectWireMock;
+import io.quarkiverse.wiremock.test.WireMockServerTestResource;
+import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
-import org.junit.jupiter.api.Assertions;
-
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
 @QuarkusTest
 @QuarkusTestResource(WireMockServerTestResource.class)
@@ -26,8 +25,7 @@ public class WiremockDevResourceTest {
     public void testHelloEndpoint() {
         Assertions.assertNotNull(wiremock);
         wiremock.register(
-                get(urlEqualTo("/wiremock-dev")).willReturn(aResponse().withStatus(200).withBody("Hello wiremock-dev"))
-        );
+                get(urlEqualTo("/wiremock-dev")).willReturn(aResponse().withStatus(200).withBody("Hello wiremock-dev")));
 
         given()
                 .when().get("/wiremock-dev")

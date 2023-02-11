@@ -16,8 +16,11 @@ import com.github.tomakehurst.wiremock.global.GlobalSettings;
 
 import io.quarkiverse.wiremock.runtime.WireMockServerConfig;
 import io.quarkus.deployment.annotations.BuildStep;
-import io.quarkus.deployment.builditem.*;
+import io.quarkus.deployment.builditem.CuratedApplicationShutdownBuildItem;
+import io.quarkus.deployment.builditem.DevServicesResultBuildItem;
 import io.quarkus.deployment.builditem.DevServicesResultBuildItem.RunningDevService;
+import io.quarkus.deployment.builditem.LaunchModeBuildItem;
+import io.quarkus.deployment.builditem.LiveReloadBuildItem;
 import io.quarkus.deployment.dev.devservices.GlobalDevServicesConfig;
 
 class QuarkusWireMockDevProcessor {
