@@ -12,9 +12,8 @@ import io.quarkus.test.common.QuarkusTestResourceLifecycleManager;
 
 public class WireMockServerTestResource implements QuarkusTestResourceLifecycleManager, DevServicesContext.ContextAware {
 
-    WireMock WIREMOCK;
-
     private static final Logger LOGGER = Logger.getLogger(WireMockServerTestResource.class);
+    WireMock WIREMOCK;
 
     @Override
     public Map<String, String> start() {
