@@ -8,7 +8,7 @@
   </parent>
   <groupId>io.quarkiverse.wiremock</groupId>
   <artifactId>quarkus-wiremock-parent</artifactId>
-  <version>0.0.2</version>
+  <version>0.0.3-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Wiremock - Parent</name>
   <modules>
@@ -85,8 +85,4 @@
       </plugins>
     </pluginManagement>
   </build>
-
-  <scm>
-    <tag>0.0.2</tag>
-  </scm>
 </project>
