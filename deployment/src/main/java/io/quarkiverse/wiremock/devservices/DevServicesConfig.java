@@ -33,21 +33,7 @@ public class DevServicesConfig {
     public int port;
 
     /**
-     * Indicates if the WireMock server managed by Quarkus Dev Services is shared.
-     * When shared
-     */
-    @ConfigItem(name = "shared", defaultValue = "true")
-    public boolean shared;
-
-    /**
-     * The value of the {@code quarkus-dev-service-mockserver} label attached to the started container.
-     * This property is used when {@code shared} is set to {@code true}.
-     * In this case, before starting a container, Dev Services for Mockserver looks for a container with the
-     * {@code quarkus-dev-service-mockserver} label
-     * set to the configured value. If found, it will use this container instead of starting a new one. Otherwise, it
-     * starts a new container with the {@code quarkus-dev-service-mockserver} label set to the specified value.
-     * <p>
-     * This property is used when you need multiple shared MockServer servers.
+     * Devservice name. default to wiremock-server
      */
     @ConfigItem(name = "service-name", defaultValue = "wiremock-server")
     public String serviceName;
@@ -68,12 +54,11 @@ public class DevServicesConfig {
         DevServicesConfig that = (DevServicesConfig) o;
         return enabled == that.enabled &&
                 Objects.equals(port, that.port) &&
-                Objects.equals(shared, that.shared) &&
                 Objects.equals(serviceName, that.serviceName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(enabled, port, shared, serviceName);
+        return Objects.hash(enabled, port, serviceName);
     }
 }

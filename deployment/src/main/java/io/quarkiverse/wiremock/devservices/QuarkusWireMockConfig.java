@@ -20,7 +20,7 @@ public class QuarkusWireMockConfig {
         /**
          * Configuration for DevServices
          * <p>
-         * DevServices allows Quarkus to automatically start MockServer in dev and test mode.
+         * DevServices allows Quarkus to automatically start WireMock in dev and test mode.
          */
         @ConfigItem
         public DevServicesConfig devservices;
