@@ -4,6 +4,7 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
@@ -12,7 +13,6 @@ import org.jboss.logging.Logger;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
-import com.github.tomakehurst.wiremock.global.GlobalSettings;
 
 import io.quarkiverse.wiremock.runtime.WireMockServerConfig;
 import io.quarkus.deployment.annotations.BuildStep;
@@ -50,7 +50,7 @@ class QuarkusWireMockDevProcessor {
                 server = null;
             };
             shutdown.addCloseTask(closeTask, true);
-        } else if (currentDevServicesConfiguration.devservices.reload) {
+        } else if (currentDevServicesConfiguration.devservices.reload && devService.isOwner()) {
             LOGGER.debug("Destroying and starting Wiremock");
             shutdownDevService(config.defaultDevService);
         }
@@ -59,53 +59,65 @@ class QuarkusWireMockDevProcessor {
             return devService.toBuildItem();
         }
 
+        LOGGER.debug("Starting WireMockServer with port [" + config.defaultDevService.devservices.port + "] " + "and path ["
+                + config.defaultDevService.devservices.filesMapping + "]");
         devService = startWireMock(config.defaultDevService);
+
+        if (devService.isOwner()) {
+            LOGGER.infof(
+                    "WireMockServer listening on http://localhost:%s", devService.getConfig().get(WireMockServerConfig.PORT));
+        }
         return devService.toBuildItem();
 
     }
 
     private RunningDevService startWireMock(QuarkusWireMockConfig.DevServiceConfiguration config) {
 
-        try {
-            LOGGER.debug("Check if wiremock instance is running on port");
-            client = new WireMock(WIREMOCK_HOST, config.devservices.port);
-            GlobalSettings globalSettings = client.getGlobalSettings();
+        final Supplier<RunningDevService> defaultWireMockSupplier = () -> {
 
-        } catch (Exception ex) {
-            LOGGER.debug("No WireMock instance found");
-            client = null;
-        }
-
-        if (client == null) {
-            LOGGER.debug("Starting WireMockServer with port [" + config.devservices.port + "] " + "and path ["
-                    + config.devservices.filesMapping + "]");
             WireMockConfiguration configuration = options()
-                    .port(config.devservices.port)
                     .usingFilesUnderDirectory(config.devservices.filesMapping);
+
+            config.devservices.port.ifPresentOrElse(port -> configuration.port(port),
+                    () -> configuration.dynamicPort());
 
             server = new WireMockServer(configuration);
             server.start();
 
-            client = new WireMock(WIREMOCK_HOST, config.devservices.port);
-        }
+            client = new WireMock(WIREMOCK_HOST, server.port());
 
-        final Supplier<RunningDevService> supplier = () -> {
-            try {
-                return new RunningDevService(DEV_SERVICE_NAME,
-                        null,
-                        client::shutdown,
-                        prepareConfiguration(config));
-            } catch (Throwable ex) {
-                throw new RuntimeException(ex);
-            }
+            return new RunningDevService(DEV_SERVICE_NAME,
+                    null,
+                    client::shutdown,
+                    prepareConfiguration(config, server.port()));
         };
 
-        return supplier.get();
+        return config.devservices.port.flatMap(QuarkusWireMockDevProcessor::locateWireMock).map(wireMock -> {
+            client = wireMock.getClient();
+            return wireMock;
+        }).map(wireMock -> new RunningDevService(DEV_SERVICE_NAME,
+                null,
+                null,
+                prepareConfiguration(config, wireMock.getPort()))).orElseGet(defaultWireMockSupplier);
     }
 
-    private Map<String, String> prepareConfiguration(QuarkusWireMockConfig.DevServiceConfiguration config) {
+    private static Optional<WireMockAddress> locateWireMock(int port) {
+        try {
+            LOGGER.debug("Check if wiremock instance is running on port");
+            var client = new WireMock(WIREMOCK_HOST, port);
+            client.getGlobalSettings();
+
+            return Optional.of(new WireMockAddress(port, client));
+        } catch (Exception ex) {
+            LOGGER.debug("No WireMock instance found");
+            client = null;
+            return Optional.empty();
+        }
+    }
+
+    private Map<String, String> prepareConfiguration(QuarkusWireMockConfig.DevServiceConfiguration config, int port) {
         return Map.of(
-                WireMockServerConfig.PORT, "" + config.devservices.port);
+                WireMockServerConfig.PORT, "" + port);
     }
 
     private void shutdownDevService(QuarkusWireMockConfig.DevServiceConfiguration config) {
@@ -118,7 +130,6 @@ class QuarkusWireMockDevProcessor {
         // Wait till the wiremock instance is shutdown.
         try {
 
-            client = new WireMock(WIREMOCK_HOST, config.devservices.port);
             client.resetToDefaultMappings();
             int retries = 20;
             while (retries > 0) {
@@ -143,6 +154,24 @@ class QuarkusWireMockDevProcessor {
             } else {
                 return false;
             }
+        }
+    }
+
+    public static class WireMockAddress {
+        private final int port;
+        private final WireMock client;
+
+        public WireMockAddress(int port, WireMock client) {
+            this.port = port;
+            this.client = client;
+        }
+
+        public int getPort() {
+            return port;
+        }
+
+        public WireMock getClient() {
+            return client;
         }
     }
 

@@ -8,9 +8,10 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 
 import io.quarkiverse.wiremock.runtime.WireMockServerConfig;
 import io.quarkus.test.common.DevServicesContext;
-import io.quarkus.test.common.QuarkusTestResourceLifecycleManager;
+import io.quarkus.test.common.QuarkusTestResourceConfigurableLifecycleManager;
 
-public class WireMockServerTestResource implements QuarkusTestResourceLifecycleManager, DevServicesContext.ContextAware {
+public class WireMockServerTestResource
+        implements QuarkusTestResourceConfigurableLifecycleManager<WithWireMockServer>, DevServicesContext.ContextAware {
 
     private static final Logger LOGGER = Logger.getLogger(WireMockServerTestResource.class);
     WireMock WIREMOCK;
@@ -36,9 +37,9 @@ public class WireMockServerTestResource implements QuarkusTestResourceLifecycleM
     public void setIntegrationTestContext(DevServicesContext context) {
         LOGGER.debug("setIntegrationTest");
         Map<String, String> devContext = context.devServicesProperties();
-        int port = Integer.parseInt(devContext.get(WireMockServerConfig.PORT));
         String host = "localhost";
         try {
+            int port = Integer.parseInt(devContext.get(WireMockServerConfig.PORT));
             WIREMOCK = new WireMock(host, port);
         } catch (Exception ex) {
             LOGGER.error("WireMock not found, it should be run from devservices.");

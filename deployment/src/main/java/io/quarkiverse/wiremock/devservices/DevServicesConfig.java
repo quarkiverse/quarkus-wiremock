@@ -1,6 +1,7 @@
 package io.quarkiverse.wiremock.devservices;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import io.quarkus.runtime.annotations.ConfigGroup;
 import io.quarkus.runtime.annotations.ConfigItem;
@@ -29,8 +30,8 @@ public class DevServicesConfig {
      * <p>
      * If not defined, the port will be 8089
      */
-    @ConfigItem(name = "port", defaultValue = "8089")
-    public int port;
+    @ConfigItem(name = "port")
+    public Optional<Integer> port;
 
     /**
      * Devservice name. default to wiremock-server

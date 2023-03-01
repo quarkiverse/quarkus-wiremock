@@ -16,6 +16,7 @@
     <module>runtime</module>
     <module>docs</module>
     <module>test</module>
+    <module>integration-tests</module>
   </modules>
   <properties>
     <compiler-plugin.version>3.10.1</compiler-plugin.version>
@@ -38,7 +39,7 @@
       </dependency>
       <dependency>
         <groupId>com.github.tomakehurst</groupId>
-        <artifactId>wiremock-jre8</artifactId>
+        <artifactId>wiremock-jre8-standalone</artifactId>
         <version>${wiremock.version}</version>
       </dependency>
     </dependencies>

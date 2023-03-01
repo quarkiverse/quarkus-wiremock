@@ -10,12 +10,11 @@ import org.junit.jupiter.api.Test;
 import com.github.tomakehurst.wiremock.client.WireMock;
 
 import io.quarkiverse.wiremock.test.InjectWireMock;
-import io.quarkiverse.wiremock.test.WireMockServerTestResource;
-import io.quarkus.test.common.QuarkusTestResource;
+import io.quarkiverse.wiremock.test.WithWireMockServer;
 import io.quarkus.test.junit.QuarkusTest;
 
 @QuarkusTest
-@QuarkusTestResource(WireMockServerTestResource.class)
+@WithWireMockServer
 public class WiremockDevResourceTest {
 
     @InjectWireMock
@@ -25,7 +24,8 @@ public class WiremockDevResourceTest {
     public void testHelloEndpoint() {
         Assertions.assertNotNull(wiremock);
         wiremock.register(
-                get(urlEqualTo("/wiremock-dev")).willReturn(aResponse().withStatus(200).withBody("Hello wiremock-dev")));
+                get(urlPathEqualTo("/wiremock-dev")).willReturn(aResponse().withStatus(200)
+                        .withBody("Hello wiremock-dev")));
 
         given()
                 .when().get("/wiremock-dev")
