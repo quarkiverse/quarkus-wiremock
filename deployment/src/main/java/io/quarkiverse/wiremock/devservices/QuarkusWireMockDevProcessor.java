@@ -12,6 +12,7 @@ import org.jboss.logging.Logger;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer;
 import com.github.tomakehurst.wiremock.global.GlobalSettings;
 
 import io.quarkiverse.wiremock.runtime.WireMockServerConfig;
@@ -81,6 +82,7 @@ class QuarkusWireMockDevProcessor {
                     + config.devservices.filesMapping + "]");
             WireMockConfiguration configuration = options()
                     .port(config.devservices.port)
+                    .extensions(new ResponseTemplateTransformer(true))
                     .usingFilesUnderDirectory(config.devservices.filesMapping);
 
             server = new WireMockServer(configuration);
