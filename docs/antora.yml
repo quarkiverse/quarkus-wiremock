@@ -1,5 +1,5 @@
 name: quarkus-wiremock
-title: Quarkus WireMock
+title: WireMock
 version: dev
 nav:
   - modules/ROOT/nav.adoc
