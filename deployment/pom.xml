@@ -50,6 +50,9 @@
                             <version>${quarkus.version}</version>
                         </path>
                     </annotationProcessorPaths>
+                    <compilerArgs>
+                        <arg>-implicit:class</arg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
         </plugins>
