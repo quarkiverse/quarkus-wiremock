@@ -24,6 +24,15 @@
         "code",
         "maintenance"
       ]
+    },
+    {
+      "login": "wjglerum",
+      "name": "Willem Jan Glerum",
+      "avatar_url": "https://avatars.githubusercontent.com/u/7404187?v=4",
+      "profile": "https://wjglerum.nl",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
