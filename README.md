@@ -1,6 +1,6 @@
 ## Quarkus extension for running Wiremock in DEVELOPMENT mode
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ```xml
@@ -33,6 +33,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Spanjer1"><img src="https://avatars.githubusercontent.com/u/40360503?v=4?s=100" width="100px;" alt="Spanjer1"/><br /><sub><b>Spanjer1</b></sub></a><br /><a href="https://github.com/quarkiverse/quarkus-wiremock/commits?author=Spanjer1" title="Code">💻</a> <a href="#maintenance-Spanjer1" title="Maintenance">🚧</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://techspace.de"><img src="https://avatars.githubusercontent.com/u/3606282?v=4?s=100" width="100px;" alt="Christian Berger"/><br /><sub><b>Christian Berger</b></sub></a><br /><a href="https://github.com/quarkiverse/quarkus-wiremock/commits?author=chberger" title="Code">💻</a> <a href="#maintenance-chberger" title="Maintenance">🚧</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://wjglerum.nl"><img src="https://avatars.githubusercontent.com/u/7404187?v=4?s=100" width="100px;" alt="Willem Jan Glerum"/><br /><sub><b>Willem Jan Glerum</b></sub></a><br /><a href="https://github.com/quarkiverse/quarkus-wiremock/commits?author=wjglerum" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
