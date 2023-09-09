@@ -1,7 +1,7 @@
 package io.quarkiverse.wiremock.test;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.event.Observes;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Observes;
 
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
@@ -11,7 +11,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import io.quarkus.runtime.StartupEvent;
 import io.quarkus.test.QuarkusUnitTest;
 
-public class WiremockDevTest {
+class WiremockDevTest {
 
     @RegisterExtension
     static final QuarkusUnitTest unitTest = new QuarkusUnitTest().withConfigurationResource("application.properties")
