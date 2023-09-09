@@ -9,7 +9,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <artifactId>quarkus-wiremock-integration-tests</artifactId>
-    <name>Wiremock - Integration Tests</name>
+    <name>WireMock - Integration Tests</name>
     <properties>
         <skipITs>true</skipITs>
     </properties>

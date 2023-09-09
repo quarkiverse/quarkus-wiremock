@@ -7,7 +7,7 @@
         <version>0.0.3-SNAPSHOT</version>
     </parent>
     <artifactId>quarkus-wiremock-deployment</artifactId>
-    <name>Wiremock - Deployment</name>
+    <name>WireMock - Deployment</name>
     <dependencies>
         <dependency>
             <groupId>io.quarkus</groupId>

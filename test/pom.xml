@@ -7,7 +7,7 @@
         <version>0.0.3-SNAPSHOT</version>
     </parent>
     <artifactId>quarkus-wiremock-test</artifactId>
-    <name>Wiremock - Test</name>
+    <name>WireMock - Test</name>
     <dependencies>
         <dependency>
             <groupId>io.quarkus</groupId>
