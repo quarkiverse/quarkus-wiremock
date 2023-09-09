@@ -1,25 +1,31 @@
-## Quarkus extension for running Wiremock in DEVELOPMENT mode
+## Quarkus - WireMock
+
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square)](https://opensource.org/licenses/Apache-2.0)
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
-```xml
-<dependency>
-    <groupId>io.quarkiverse.wiremock</groupId>
-    <artifactId>quarkus-wiremock</artifactId>
-    <version>{project-version}</version>
-</dependency>
-```
+Quarkus [WireMock](https://wiremock.org) extension for test and local development.
+Please refer to the documentation for further details.
 
-The current properties are
-```properties
-quarkus.wiremock.devservices.enabled=true
-quarkus.wiremock.devservices.files-mapping=<path to wiremock root dir with mappings and __files folders>
-quarkus.wiremock.devservices.port=8089
-quarkus.wiremock.devservices.reload=true
-```
+## Compatibility
 
-This is a very basic way of running Wiremock together with Quarkus. 
+This Quarkus ``WireMock`` extension provides different version streams.
+
+| Quarkus WireMock    | Quarkus Platform | WireMock | Documentation                                                                                                       |
+|---------------------|------------------|----------|---------------------------------------------------------------------------------------------------------------------|
+| 0.x.x               | 2.16.x.Final     | 2.35.x   | [Quarkiverse Docs - Wiremock (0.x)](https://quarkiverse.github.io/quarkiverse-docs/quarkus-wiremock/0.x/index.html) |
+| 1.x.x (coming soon) | 3.2.x (LTS)      | 3.x      | [Quarkiverse Docs - Wiremock (dev)](https://quarkiverse.github.io/quarkiverse-docs/quarkus-wiremock/dev/index.html) |
+
+## Module description
+
+| Module           | Description                                                                                                                                                                                                                                                                                        |
+|------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| deployment       | The deployment module is used during the augmentation phase of the build and contains the major logic to configure and ramp-up ``WireMock`` as a ``DevService``. In addition, this module also contains test classes to test basic ``DevService`` functionality.                                   |
+| runtime          | This is the module the application's developer will add as application dependency to enable ``WireMock`` as a ``DevService``. For this extension the runtime module is almost empty since everything will happen at build time (please refer to the deployment module).                            |
+| test             | This module can be used during test execution to retrieve a reference of the running ``WireMock`` instance managed by the ``DevService``. This is quite helpful when a developer wants to describe the ``WireMock`` behavior programmatically. For more details please refer to the documentation. |
+| integration-test | Contains Quarkus tests to verify the proper functionality of the extension.                                                                                                                                                                                                                        |
+| docs             | Project documentation happens via [Asciidoctor](https://asciidoctor.org/) for content and [Antora](https://antora.org/) for navigation. The resulting documentation will be published to [Quarkiverse Docs](https://docs.quarkiverse.io/).                                                     |
 
 ## Contributors ✨
 
@@ -43,4 +49,5 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
-This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification.
+Contributions of any kind welcome!
