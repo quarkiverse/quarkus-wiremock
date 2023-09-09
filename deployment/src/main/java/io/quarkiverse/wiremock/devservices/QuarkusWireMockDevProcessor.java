@@ -19,18 +19,24 @@ import io.quarkus.deployment.annotations.BuildStep;
 import io.quarkus.deployment.builditem.CuratedApplicationShutdownBuildItem;
 import io.quarkus.deployment.builditem.DevServicesResultBuildItem;
 import io.quarkus.deployment.builditem.DevServicesResultBuildItem.RunningDevService;
+import io.quarkus.deployment.builditem.FeatureBuildItem;
 import io.quarkus.deployment.builditem.LaunchModeBuildItem;
 import io.quarkus.deployment.builditem.LiveReloadBuildItem;
 import io.quarkus.deployment.dev.devservices.GlobalDevServicesConfig;
 
 class QuarkusWireMockDevProcessor {
     private static final String WIREMOCK_HOST = "localhost";
-    private static final String DEV_SERVICE_NAME = "wiremock-service";
+    private static final String DEV_SERVICE_NAME = "wiremock";
     private static final Logger LOGGER = Logger.getLogger(QuarkusWireMockDevProcessor.class);
     static volatile RunningDevService devService;
     static volatile WireMockServer server;
 
     static volatile WireMock client;
+
+    @BuildStep
+    FeatureBuildItem feature() {
+        return new FeatureBuildItem(DEV_SERVICE_NAME);
+    }
 
     @BuildStep(onlyIf = { IsEnabled.class, GlobalDevServicesConfig.Enabled.class })
     DevServicesResultBuildItem setup(LaunchModeBuildItem launchMode,
