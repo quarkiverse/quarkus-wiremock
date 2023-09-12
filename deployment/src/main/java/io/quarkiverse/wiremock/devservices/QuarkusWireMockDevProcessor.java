@@ -44,7 +44,7 @@ class QuarkusWireMockDevProcessor {
             CuratedApplicationShutdownBuildItem shutdown,
             QuarkusWireMockConfig config, GlobalDevServicesConfig devServicesConfig) {
 
-        LOGGER.debug("Launchmode [" + launchMode + "]");
+        LOGGER.debug("Launchmode [" + launchMode.getLaunchMode() + "]");
         QuarkusWireMockConfig.DevServiceConfiguration currentDevServicesConfiguration = config.defaultDevService;
 
         if (!liveReload.isLiveReload()) {
@@ -73,7 +73,7 @@ class QuarkusWireMockDevProcessor {
     private RunningDevService startWireMock(QuarkusWireMockConfig.DevServiceConfiguration config) {
 
         try {
-            LOGGER.debug("Check if wiremock instance is running on port");
+            LOGGER.debugf("Check if wiremock instance is running on port %s", config.devservices.port);
             client = new WireMock(WIREMOCK_HOST, config.devservices.port);
             GlobalSettings globalSettings = client.getGlobalSettings();
 
