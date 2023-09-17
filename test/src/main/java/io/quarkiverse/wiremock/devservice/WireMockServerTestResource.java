@@ -1,47 +1,48 @@
-package io.quarkiverse.wiremock.test;
+package io.quarkiverse.wiremock.devservice;
 
+import static io.quarkiverse.wiremock.devservice.WireMockConfig.PORT;
+
+import java.util.Collections;
 import java.util.Map;
 
 import org.jboss.logging.Logger;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 
-import io.quarkiverse.wiremock.runtime.WireMockServerConfig;
 import io.quarkus.test.common.DevServicesContext;
 import io.quarkus.test.common.QuarkusTestResourceLifecycleManager;
 
-public class WireMockServerTestResource implements QuarkusTestResourceLifecycleManager, DevServicesContext.ContextAware {
+public class WireMockServerTestResource
+        implements QuarkusTestResourceLifecycleManager, DevServicesContext.ContextAware {
 
     private static final Logger LOGGER = Logger.getLogger(WireMockServerTestResource.class);
-    WireMock WIREMOCK;
+    WireMock wiremock;
 
     @Override
     public Map<String, String> start() {
-        LOGGER.debug("start");
-        return null;
+        return Collections.emptyMap();
     }
 
     @Override
     public void stop() {
+        LOGGER.debug("Stop callback called!");
     }
 
     @Override
     public void inject(TestInjector testInjector) {
-        LOGGER.debug("Injecting");
-        testInjector.injectIntoFields(WIREMOCK,
+        testInjector.injectIntoFields(wiremock,
                 new TestInjector.AnnotatedAndMatchesType(InjectWireMock.class, WireMock.class));
     }
 
     @Override
     public void setIntegrationTestContext(DevServicesContext context) {
-        LOGGER.debug("setIntegrationTest");
-        Map<String, String> devContext = context.devServicesProperties();
-        int port = Integer.parseInt(devContext.get(WireMockServerConfig.PORT));
-        String host = "localhost";
+        final Map<String, String> devContext = context.devServicesProperties();
+        int port = Integer.parseInt(devContext.get(PORT));
         try {
-            WIREMOCK = new WireMock(host, port);
+            wiremock = new WireMock(port);
         } catch (Exception ex) {
-            LOGGER.error("WireMock not found, it should be run from devservices.");
+            LOGGER.error("WireMock server not found! It should run as Dev Service.", ex);
+            throw ex;
         }
     }
 

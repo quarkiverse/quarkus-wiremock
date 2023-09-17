@@ -1,5 +1,7 @@
-package io.quarkiverse.wiremock.test;
+package io.quarkiverse.wiremock.devservice;
 
+import static io.quarkiverse.wiremock.devservice.WireMockConfig.APP_PROPERTIES;
+import static io.quarkiverse.wiremock.devservice.WireMockDevServicesBuildTimeConfig.DEFAULT_PORT;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -16,34 +18,32 @@ import io.restassured.RestAssured;
 
 // Write your dev mode tests here - see the testing extension guide https://quarkus.io/guides/writing-extensions#testing-hot-reload for more information
 public class WireMockDevModeTest {
-    private static final String DEFAULT_PORT = "8089";
-    private static final String ANOTHER_PORT = "8090";
+    private static final String TEST_PORT = "8090";
 
-    private static final String APPLICATION_PROPERTIES = "application.properties";
+    private static final String BASE_URL = "/quarkus/wiremock/devservices";
 
     // Start hot reload (DevMode) test with your extension loaded
     @RegisterExtension
     static final QuarkusDevModeTest DEV_MODE_TEST = new QuarkusDevModeTest().setArchiveProducer(
-            () -> ShrinkWrap.create(JavaArchive.class).addClass(RetrieveConfigValueResource.class)
-                    .addAsResource(APPLICATION_PROPERTIES));
+            () -> ShrinkWrap.create(JavaArchive.class).addClass(ConfigProviderResource.class)
+                    .addAsResource(APP_PROPERTIES));
 
     @Test
     public void testPortMappingViaLiveReload() {
-        RestAssured.get("/wiremock/config/reload/value").then().body(equalTo("true"));
-        RestAssured.get("/wiremock/config/port/value").then().body(equalTo(DEFAULT_PORT));
         assertTrue(isPortInUse(DEFAULT_PORT), "WireMock DevService doesn't listen on port " + DEFAULT_PORT);
 
-        DEV_MODE_TEST.modifyResourceFile(APPLICATION_PROPERTIES,
-                s -> s.replace("port=" + DEFAULT_PORT, "port=" + ANOTHER_PORT));
+        RestAssured.get(BASE_URL + "/reload").then().body(equalTo("true"));
+        DEV_MODE_TEST.modifyResourceFile(APP_PROPERTIES,
+                s -> s.replace("reload=true", "reload=true\nquarkus.wiremock.devservices.port=" + TEST_PORT));
 
-        RestAssured.get("/wiremock/config/port/value").then()
-                .body(equalTo(ANOTHER_PORT)); // REST request triggers live reload
+        // REST request triggers live reload
+        RestAssured.get(BASE_URL + "/port").then().body(equalTo(TEST_PORT));
 
-        assertTrue(isPortInUse(ANOTHER_PORT), "WireMock DevService doesn't listen on port " + ANOTHER_PORT);
+        assertTrue(isPortInUse(TEST_PORT), "WireMock DevService doesn't listen on port " + TEST_PORT);
     }
 
     private static boolean isPortInUse(String port) {
-        try (ServerSocket serverSocket = new ServerSocket(Integer.valueOf(port))) {
+        try (ServerSocket ignored = new ServerSocket(Integer.valueOf(port))) {
             return false;
         } catch (IOException e) {
             return true;
