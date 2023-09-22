@@ -25,7 +25,7 @@ public class WireMockServerTestResource
 
     @Override
     public void stop() {
-        LOGGER.debug("Stop callback called!");
+        // nothing to do, since the Dev Service will shut down the server
     }
 
     @Override
@@ -40,6 +40,7 @@ public class WireMockServerTestResource
         int port = Integer.parseInt(devContext.get(PORT));
         try {
             wiremock = new WireMock(port);
+            wiremock.getGlobalSettings(); // establish a connection to WireMock server eagerly
         } catch (Exception ex) {
             LOGGER.error("WireMock server not found! It should run as Dev Service.", ex);
             throw ex;
