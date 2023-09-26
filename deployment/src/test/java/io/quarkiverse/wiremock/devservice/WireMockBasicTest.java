@@ -22,7 +22,7 @@ class WireMockBasicTest {
 
     @Test
     void testWireMockMappingsFolder() {
-        final String port = ConfigProvider.getConfig().getOptionalValue(PORT, String.class).orElseThrow();
+        final String port = ConfigProvider.getConfig().getValue(PORT, String.class);
         RestAssured.when().get(String.format("http://localhost:%s/wiremock", port)).then().statusCode(Response.SC_OK)
                 .body(is("Everything was just fine!"));
     }
