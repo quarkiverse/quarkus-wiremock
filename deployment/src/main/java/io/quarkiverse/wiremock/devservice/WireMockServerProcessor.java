@@ -1,12 +1,11 @@
 package io.quarkiverse.wiremock.devservice;
 
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
-import static io.quarkiverse.wiremock.devservice.WireMockConfig.PORT;
+import static io.quarkiverse.wiremock.devservice.WireMockDevServiceConfig.PORT;
+import static io.quarkiverse.wiremock.devservice.WireMockDevServiceConfig.PREFIX;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.util.Map;
-import java.util.function.BooleanSupplier;
 
 import org.jboss.logging.Logger;
 
@@ -21,9 +20,10 @@ import io.quarkus.deployment.builditem.LaunchModeBuildItem;
 import io.quarkus.deployment.builditem.LiveReloadBuildItem;
 import io.quarkus.deployment.dev.devservices.GlobalDevServicesConfig;
 
-class WireMockDevProcessor {
-    private static final Logger LOGGER = Logger.getLogger(WireMockDevProcessor.class);
+class WireMockServerProcessor {
+    private static final Logger LOGGER = Logger.getLogger(WireMockServerProcessor.class);
     private static final String FEATURE_NAME = "wiremock";
+    private static final String CONFIG_TEMPLATE = "%%dev,test.%s.%s";
     static volatile RunningDevService devService;
 
     @BuildStep
@@ -31,17 +31,16 @@ class WireMockDevProcessor {
         return new FeatureBuildItem(FEATURE_NAME);
     }
 
-    @BuildStep(onlyIf = { IsEnabled.class, GlobalDevServicesConfig.Enabled.class })
+    @BuildStep(onlyIf = { WireMockServerEnabled.class, GlobalDevServicesConfig.Enabled.class })
     DevServicesResultBuildItem setup(LaunchModeBuildItem launchMode, LiveReloadBuildItem liveReload,
-            CuratedApplicationShutdownBuildItem shutdown, WireMockBuildTimeConfig wireMockBuildTimeConfig) {
+            CuratedApplicationShutdownBuildItem shutdown, WireMockServerConfig config) {
 
         LOGGER.debugf("Quarkus launch mode [%s]", launchMode.getLaunchMode());
-        final WireMockDevServicesBuildTimeConfig config = wireMockBuildTimeConfig.devservices;
 
         // register shutdown callback once
-        shutdown.addCloseTask(WireMockDevProcessor::stopWireMockDevService, true);
+        shutdown.addCloseTask(WireMockServerProcessor::stopWireMockDevService, true);
 
-        if (liveReload.isLiveReload() && config.reload) {
+        if (liveReload.isLiveReload() && config.reload()) {
             LOGGER.debug("Live reload triggered!");
             stopWireMockDevService();
         }
@@ -52,24 +51,22 @@ class WireMockDevProcessor {
         return devService.toBuildItem();
     }
 
-    private static RunningDevService startWireMockDevService(WireMockDevServicesBuildTimeConfig config) {
+    private static RunningDevService startWireMockDevService(WireMockServerConfig config) {
 
-        LOGGER.debugf("Starting WireMock server with port [%s] and path [%s]", config.port, config.filesMapping);
+        LOGGER.debugf("Starting WireMock server with port [%s] and path [%s]", config.port(), config.filesMapping());
         final WireMockServer server = new WireMockServer(
-                options().port(config.port).usingFilesUnderDirectory(config.filesMapping));
+                options().port(config.port()).usingFilesUnderDirectory(config.filesMapping()));
         server.start();
 
-        return new RunningDevService(config.serviceName, null, server::shutdown, extractPort(config));
-    }
-
-    private static Map<String, String> extractPort(WireMockDevServicesBuildTimeConfig config) {
-        return Map.of(PORT, String.valueOf(config.port));
+        return new RunningDevService(config.serviceName(), null, server::shutdown, getPropertyKey(PORT),
+                String.valueOf(config.port()));
     }
 
     private static synchronized void stopWireMockDevService() {
         try {
             if (devService != null) {
-                LOGGER.debugf("Stopping WireMock server running on port %s", devService.getConfig().get(PORT));
+                LOGGER.debugf("Stopping WireMock server running on port %s",
+                        devService.getConfig().get(getPropertyKey(PORT)));
                 devService.close();
             }
         } catch (IOException e) {
@@ -80,12 +77,8 @@ class WireMockDevProcessor {
         }
     }
 
-    public static class IsEnabled implements BooleanSupplier {
-        WireMockBuildTimeConfig config;
-
-        public boolean getAsBoolean() {
-            return config.devservices.enabled;
-        }
+    private static String getPropertyKey(String propertyName) {
+        return String.format(CONFIG_TEMPLATE, PREFIX, propertyName);
     }
 
 }

@@ -1,7 +1,8 @@
 package io.quarkiverse.wiremock.devservice;
 
-import static io.quarkiverse.wiremock.devservice.WireMockConfig.APP_PROPERTIES;
-import static io.quarkiverse.wiremock.devservice.WireMockConfig.PORT;
+import static io.quarkiverse.wiremock.devservice.TestUtil.APP_PROPERTIES;
+import static io.quarkiverse.wiremock.devservice.WireMockDevServiceConfig.PORT;
+import static io.quarkiverse.wiremock.devservice.WireMockDevServiceConfig.PREFIX;
 import static org.hamcrest.Matchers.is;
 
 import org.eclipse.jetty.server.Response;
@@ -22,8 +23,8 @@ class WireMockBasicTest {
 
     @Test
     void testWireMockMappingsFolder() {
-        final String port = ConfigProvider.getConfig().getValue(PORT, String.class);
-        RestAssured.when().get(String.format("http://localhost:%s/wiremock", port)).then().statusCode(Response.SC_OK)
+        final int port = ConfigProvider.getConfig().getValue(PREFIX + "." + PORT, Integer.class);
+        RestAssured.when().get(String.format("http://localhost:%d/wiremock", port)).then().statusCode(Response.SC_OK)
                 .body(is("Everything was just fine!"));
     }
 

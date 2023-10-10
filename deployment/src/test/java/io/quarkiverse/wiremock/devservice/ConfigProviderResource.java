@@ -1,10 +1,9 @@
 package io.quarkiverse.wiremock.devservice;
 
-import static io.quarkiverse.wiremock.devservice.WireMockConfig.CONFIG_ROOT_FQN;
+import static io.quarkiverse.wiremock.devservice.WireMockDevServiceConfig.PREFIX;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.GET;
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -20,7 +19,6 @@ class ConfigProviderResource {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public String getValue(@PathParam("property") String property) {
-        return ConfigProvider.getConfig().getOptionalValue(CONFIG_ROOT_FQN + "." + property, String.class)
-                .orElseThrow(NotFoundException::new);
+        return ConfigProvider.getConfig().getValue(PREFIX + "." + property, String.class);
     }
 }
