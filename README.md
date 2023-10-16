@@ -5,14 +5,18 @@
 [![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
-Quarkus [WireMock](https://wiremock.org) extension for test and local development.
-Please refer to the documentation for further details.
+## Description
+
+A Quarkus extension that provides [WireMock](https://wiremock.org) as a DevService.
+> Quarkus [WireMock](https://wiremock.org) extension is supposed to be used in `dev` and `test` mode only. For further
+> details please refer to
+> the [documentation](https://quarkiverse.github.io/quarkiverse-docs/quarkus-wiremock/dev/index.html).
 
 ## Compatibility
 
 This Quarkus ``WireMock`` extension provides different version streams.
 
-| Quarkus WireMock    | Quarkus Platform | WireMock | Documentation                                                                                                       |
+| WireMock extension  | Quarkus Platform | WireMock | Documentation                                                                                                       |
 |---------------------|------------------|----------|---------------------------------------------------------------------------------------------------------------------|
 | 0.x.x               | 2.16.x.Final     | 2.35.x   | [Quarkiverse Docs - Wiremock (0.x)](https://quarkiverse.github.io/quarkiverse-docs/quarkus-wiremock/0.x/index.html) |
 | 1.x.x (coming soon) | 3.2.x (LTS)      | 3.x      | [Quarkiverse Docs - Wiremock (dev)](https://quarkiverse.github.io/quarkiverse-docs/quarkus-wiremock/dev/index.html) |
@@ -24,8 +28,8 @@ This Quarkus ``WireMock`` extension provides different version streams.
 | deployment       | The deployment module is used during the augmentation phase of the build and contains the major logic to configure and ramp-up ``WireMock`` as a ``DevService``. In addition, this module also contains test classes to test basic ``DevService`` functionality.                                   |
 | runtime          | This is the module the application's developer will add as application dependency to enable ``WireMock`` as a ``DevService``. For this extension the runtime module is almost empty since everything will happen at build time (please refer to the deployment module).                            |
 | test             | This module can be used during test execution to retrieve a reference of the running ``WireMock`` instance managed by the ``DevService``. This is quite helpful when a developer wants to describe the ``WireMock`` behavior programmatically. For more details please refer to the documentation. |
-| integration-test | Contains Quarkus tests to verify the proper functionality of the extension.                                                                                                                                                                                                                        |
-| docs             | Project documentation happens via [Asciidoctor](https://asciidoctor.org/) for content and [Antora](https://antora.org/) for navigation. The resulting documentation will be published to [Quarkiverse Docs](https://docs.quarkiverse.io/).                                                     |
+| integration-test | Contains Quarkus tests to verify the proper functionality of the extension. This module uses the ``WireMock`` extension in a way how a business application would use it.                                                                                                                          |
+| docs             | Project documentation happens via [Asciidoctor](https://asciidoctor.org/) for content and [Antora](https://antora.org/) for navigation. The resulting documentation will be published to [Quarkiverse Docs](https://docs.quarkiverse.io/).                                                         |
 
 ## Contributors ✨
 
