@@ -36,7 +36,7 @@ public interface WireMockServerConfig {
     int port();
 
     /**
-     * Path of the WireMock configuration files
+     * Path to the WireMock configuration files
      */
     @WithDefault("src/test/resources")
     String filesMapping();

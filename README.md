@@ -1,5 +1,5 @@
 ## Quarkus - WireMock
-
+[![Build](https://github.com/quarkiverse/quarkus-wiremock/actions/workflows/build.yml/badge.svg)](https://github.com/quarkiverse/quarkus-wiremock/actions/workflows/build.yml)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square)](https://opensource.org/licenses/Apache-2.0)
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
@@ -7,10 +7,7 @@
 
 ## Description
 
-A Quarkus extension that provides [WireMock](https://wiremock.org) as a DevService.
-> Quarkus [WireMock](https://wiremock.org) extension is supposed to be used in `dev` and `test` mode only. For further
-> details please refer to
-> the [documentation](https://quarkiverse.github.io/quarkiverse-docs/quarkus-wiremock/dev/index.html).
+Quarkus [WireMock](https://wiremock.org) extension for tests and local development.
 
 ## Compatibility
 
@@ -21,7 +18,10 @@ This Quarkus ``WireMock`` extension provides different version streams.
 | 0.x.x               | 2.16.x.Final     | 2.35.x   | [Quarkiverse Docs - Wiremock (0.x)](https://quarkiverse.github.io/quarkiverse-docs/quarkus-wiremock/0.x/index.html) |
 | 1.x.x (coming soon) | 3.2.x (LTS)      | 3.x      | [Quarkiverse Docs - Wiremock (dev)](https://quarkiverse.github.io/quarkiverse-docs/quarkus-wiremock/dev/index.html) |
 
-## Module description
+## Development instructions
+
+
+### Module description
 
 | Module           | Description                                                                                                                                                                                                                                                                                        |
 |------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
