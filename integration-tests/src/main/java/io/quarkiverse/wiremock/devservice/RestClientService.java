@@ -7,7 +7,7 @@ import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 import io.smallrye.mutiny.Uni;
 
-@RegisterRestClient(baseUri = "http://localhost:8089")
+@RegisterRestClient(configKey = "wiremock-server")
 public interface RestClientService {
 
     @GET

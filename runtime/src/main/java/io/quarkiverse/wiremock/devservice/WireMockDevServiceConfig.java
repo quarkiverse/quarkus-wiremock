@@ -5,7 +5,7 @@ package io.quarkiverse.wiremock.devservice;
  * Although the definitions are placed in the runtime module, it's not the intention to make these configurations
  * editable at runtime.
  */
-class WireMockDevServiceConfig {
+public class WireMockDevServiceConfig {
     public static final String PREFIX = "quarkus.wiremock.devservices";
     public static final String PORT = "port";
 
