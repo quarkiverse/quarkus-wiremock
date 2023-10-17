@@ -1,0 +1,10 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/template"
+  },
+  "response": {
+    "status": 200,
+    "body": "Everything was just fine from {{ request.port }}!"
+  }
+}

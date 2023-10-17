@@ -40,4 +40,12 @@ public interface WireMockServerConfig {
      */
     @WithDefault("src/test/resources")
     String filesMapping();
+
+    /**
+     * If global response templating should be enabled for WireMock
+     *
+     * @see <a href="https://wiremock.org/2.x/docs/response-templating/">https://wiremock.org/2.x/docs/response-templating/</a>
+     */
+    @WithDefault("false")
+    boolean globalResponseTemplating();
 }
