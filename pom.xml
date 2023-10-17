@@ -28,7 +28,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <quarkus.version>3.2.6.Final</quarkus.version>
-    <wiremock.version>2.35.1</wiremock.version>
+    <wiremock.version>3.2.0</wiremock.version>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -40,8 +40,8 @@
         <scope>import</scope>
       </dependency>
       <dependency>
-        <groupId>com.github.tomakehurst</groupId>
-        <artifactId>wiremock-jre8</artifactId>
+        <groupId>org.wiremock</groupId>
+        <artifactId>wiremock</artifactId>
         <version>${wiremock.version}</version>
       </dependency>
     </dependencies>
