@@ -9,7 +9,7 @@
     </parent>
 
     <artifactId>quarkus-wiremock-docs</artifactId>
-    <name>Quarkus WireMock - Documentation</name>
+    <name>WireMock - Documentation</name>
 
     <dependencies>
         <!-- Make sure the doc is built after the other artifacts -->

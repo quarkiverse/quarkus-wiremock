@@ -1,11 +1,11 @@
 ---
 artifact: ${project.groupId}:${project.artifactId}:${project.version}
 name: Wiremock
-description: WireMock DevService for testing
-#description: Do something useful.
+description: WireMock DevService for dev and test mode
 metadata:
   keywords:
     - wiremock
+    - wiremock-server
     - test
   categories:
     - "testing"

@@ -1,4 +1,4 @@
-package io.quarkiverse.wiremock.test;
+package io.quarkiverse.wiremock.devservice;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

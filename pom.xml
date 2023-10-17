@@ -10,12 +10,13 @@
   <artifactId>quarkus-wiremock-parent</artifactId>
   <version>0.0.3-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>Wiremock - Parent</name>
+  <name>WireMock - Parent</name>
   <modules>
     <module>deployment</module>
     <module>runtime</module>
     <module>docs</module>
     <module>test</module>
+    <module>integration-tests</module>
   </modules>
   <scm>
     <connection>scm:git:git@github.com:quarkiverse/quarkus-wiremock.git</connection>
@@ -26,8 +27,8 @@
     <maven.compiler.release>11</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <quarkus.version>3.2.5.Final</quarkus.version>
-    <wiremock.version>2.35.0</wiremock.version>
+    <quarkus.version>2.16.11.Final</quarkus.version>
+    <wiremock.version>2.35.1</wiremock.version>
   </properties>
   <dependencyManagement>
     <dependencies>

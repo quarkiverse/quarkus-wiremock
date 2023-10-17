@@ -6,30 +6,24 @@
     <parent>
         <groupId>io.quarkiverse.wiremock</groupId>
         <artifactId>quarkus-wiremock-parent</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.0.3-SNAPSHOT</version>
     </parent>
     <artifactId>quarkus-wiremock-integration-tests</artifactId>
-    <name>Wiremock - Integration Tests</name>
-    <properties>
-        <skipITs>true</skipITs>
-    </properties>
+    <name>WireMock - Integration Tests</name>
     <dependencies>
         <dependency>
             <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-resteasy</artifactId>
+            <artifactId>quarkus-resteasy-reactive</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-rest-client-reactive</artifactId>
         </dependency>
         <dependency>
             <groupId>io.quarkiverse.wiremock</groupId>
             <artifactId>quarkus-wiremock</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.smallrye.reactive</groupId>
-            <artifactId>smallrye-mutiny-vertx-web-client</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-resteasy-mutiny</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -45,7 +39,7 @@
         <dependency>
             <groupId>io.quarkiverse.wiremock</groupId>
             <artifactId>quarkus-wiremock-test</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -102,7 +96,6 @@
                 </plugins>
             </build>
             <properties>
-                <skipITs>false</skipITs>
                 <quarkus.package.type>native</quarkus.package.type>
             </properties>
         </profile>

@@ -7,15 +7,11 @@
         <version>0.0.3-SNAPSHOT</version>
     </parent>
     <artifactId>quarkus-wiremock-test</artifactId>
-    <name>Wiremock - Test</name>
+    <name>WireMock - Test</name>
     <dependencies>
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-test-common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.github.tomakehurst</groupId>
-            <artifactId>wiremock-jre8</artifactId>
         </dependency>
         <dependency>
             <groupId>io.quarkiverse.wiremock</groupId>
@@ -23,10 +19,8 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.quarkiverse.wiremock</groupId>
-            <artifactId>quarkus-wiremock-deployment</artifactId>
-            <version>0.0.3-SNAPSHOT</version>
-            <scope>compile</scope>
+            <groupId>com.github.tomakehurst</groupId>
+            <artifactId>wiremock-jre8</artifactId>
         </dependency>
     </dependencies>
     <build>

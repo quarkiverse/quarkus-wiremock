@@ -1,0 +1,10 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/wiremock"
+  },
+  "response": {
+    "status": 200,
+    "body": "Everything was just fine!"
+  }
+}

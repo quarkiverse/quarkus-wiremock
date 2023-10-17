@@ -2,7 +2,7 @@
 
 include::./includes/attributes.adoc[]
 
-TIP: Quarkus test WireMock extension.
+Quarkus https://wiremock.org[WireMock] extension for tests and local development.
 
 == Installation
 
@@ -14,14 +14,73 @@ For instance, with Maven, add the following dependency to your POM file:
 ----
 <dependency>
     <groupId>io.quarkiverse.wiremock</groupId>
+    <artifactId>quarkus-wiremock</artifactId>
+    <version>{project-version}</version>
+    <scope>test</scope>
+</dependency>
+----
+
+== Usage
+
+TIP: The extension is designed to run in `dev` and `test` mode only! Please don't specify any attributes applicable for the `prod` profile, otherwise `unknown` property warnings will show up when executing the production build.
+
+Example (default) configuration for testing and local development:
+[source,properties]
+----
+%dev,test.quarkus.wiremock.devservices.enabled=true
+%dev,test.quarkus.wiremock.devservices.reload=false
+%dev,test.quarkus.wiremock.devservices.files-mapping=src/test/resources
+%dev,test.quarkus.wiremock.devservices.port=8089
+%dev,test.quarkus.wiremock.devservices.service-name=wiremock-server
+----
+
+== Testing
+
+In addition, you might want to configure `WireMock` programmatically. To do so, please add the following dependency to the target project:
+
+[source,xml,subs=attributes+]
+----
+<dependency>
+    <groupId>io.quarkiverse.wiremock</groupId>
     <artifactId>quarkus-wiremock-test</artifactId>
     <version>{project-version}</version>
+    <scope>test</scope>
 </dependency>
+----
+
+After that, you are able to inject a `WireMock` reference along with your test execution lifecycle has shown below:
+[source,java]
+----
+@QuarkusTest
+@QuarkusTestResource(WireMockServerTestResource.class)
+class WireMockDevServiceResourceTest {
+
+    private static final String MOCK_MSG = "Hello from WireMock!";
+
+    @InjectWireMock
+    WireMock wiremock;
+
+    @Test
+    void testHelloEndpoint() {
+        Assertions.assertNotNull(wiremock);
+        wiremock.register(get(urlEqualTo("/mock-me"))
+            .willReturn(aResponse().withStatus(200).withBody(MOCK_MSG)));
+        ...
+    }
+
+}
+----
+
+You can also reuse a `@QuarkusTest` as a `@QuarkusIntegrationTest`:
+[source,java]
+----
+@QuarkusIntegrationTest
+public class WireMockDevServiceResourceIT extends WireMockDevServiceResourceTest {
+    // re-use Quarkus tests as integration tests
+}
 ----
 
 [[extension-configuration-reference]]
 == Extension Configuration Reference
 
-TIP: Remove this section if you don't have Quarkus configuration properties in your extension.
-
-
+include::includes/quarkus-wiremock.adoc[leveloffset=+1, opts=optional]
