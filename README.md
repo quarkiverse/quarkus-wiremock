@@ -20,6 +20,11 @@ This Quarkus ``WireMock`` extension provides different version streams.
 
 ## Development instructions
 
+### Git repo configuration (for Windows only)
+```properties
+git config core.eol lf
+git config core.autocrlf input
+```
 
 ### Module description
 
