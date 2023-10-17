@@ -7,9 +7,6 @@
 # The above will handle all files NOT found below
 #
 
-# ApprovalTests.Java ( https://github.com/approvals/ApprovalTests.Java )
-*.approved.* binary
-
 # Documents
 *.bibtex   text diff=bibtex
 *.doc      diff=astextplain
