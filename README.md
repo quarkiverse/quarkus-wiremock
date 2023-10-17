@@ -1,4 +1,4 @@
-## Quarkus - WireMock
+# Quarkus - WireMock
 [![GitHub Actions Status](https://img.shields.io/github/actions/workflow/status/quarkiverse/quarkus-wiremock/build.yml?branch=main&logo=GitHub&style=for-the-badge)](https://github.com/quarkiverse/quarkus-wiremock/actions/workflows/build.yml)
 [![Version](https://img.shields.io/maven-central/v/io.quarkiverse.wiremock/quarkus-wiremock-parent?logo=apache-maven&style=for-the-badge)](https://search.maven.org/search?q=g:io.quarkiverse.wiremock%20AND%20a:quarkus-wiremock-parent)
 [![License](https://img.shields.io/github/license/quarkusio/quarkus?style=for-the-badge&logo=apache)](https://www.apache.org/licenses/LICENSE-2.0)
@@ -19,9 +19,10 @@ This Quarkus ``WireMock`` extension provides different version streams.
 | 0.x.x               | 2.16.x.Final     | 2.35.x   | [Quarkiverse Docs - Wiremock (0.x)](https://quarkiverse.github.io/quarkiverse-docs/quarkus-wiremock/0.x/index.html) |
 | 1.x.x (coming soon) | 3.2.x (LTS)      | 3.x      | [Quarkiverse Docs - Wiremock (dev)](https://quarkiverse.github.io/quarkiverse-docs/quarkus-wiremock/dev/index.html) |
 
-## Development instructions
+## Contribution
 
-### Git repo configuration (for Windows only)
+### Git repo config
+> Required for Windows user only
 ```shell
 git config core.eol lf
 git config core.autocrlf input
