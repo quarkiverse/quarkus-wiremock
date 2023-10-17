@@ -22,7 +22,7 @@ This Quarkus ``WireMock`` extension provides different version streams.
 ## Contribution
 
 ### Git repo config
-> Required for Windows user only
+> **⚠️** Required for Windows user only
 ```shell
 git config core.eol lf
 git config core.autocrlf input
