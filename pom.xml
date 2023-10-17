@@ -8,7 +8,7 @@
   </parent>
   <groupId>io.quarkiverse.wiremock</groupId>
   <artifactId>quarkus-wiremock-parent</artifactId>
-  <version>0.0.3-SNAPSHOT</version>
+  <version>0.1.0</version>
   <packaging>pom</packaging>
   <name>WireMock - Parent</name>
   <modules>
@@ -22,6 +22,7 @@
     <connection>scm:git:git@github.com:quarkiverse/quarkus-wiremock.git</connection>
     <developerConnection>scm:git:git@github.com:quarkiverse/quarkus-wiremock.git</developerConnection>
     <url>https://github.com/quarkiverse/quarkus-wiremock</url>
+    <tag>0.1.0</tag>
   </scm>
   <properties>
     <maven.compiler.release>11</maven.compiler.release>
