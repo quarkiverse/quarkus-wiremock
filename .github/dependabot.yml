@@ -14,3 +14,7 @@ updates:
         # For Quarkus, ignore all minor updates to stay on LTS stream
       - dependency-name: "io.quarkus:quarkus-bom"
         update-types: ["version-update:semver-minor"]
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
