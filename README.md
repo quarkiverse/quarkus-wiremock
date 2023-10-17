@@ -1,6 +1,7 @@
 ## Quarkus - WireMock
-[![Build](https://github.com/quarkiverse/quarkus-wiremock/actions/workflows/build.yml/badge.svg)](https://github.com/quarkiverse/quarkus-wiremock/actions/workflows/build.yml)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square)](https://opensource.org/licenses/Apache-2.0)
+[![GitHub Actions Status](https://img.shields.io/github/actions/workflow/status/quarkiverse/quarkus-wiremock/build.yml?branch=main&logo=GitHub&style=for-the-badge)](https://github.com/quarkiverse/quarkus-wiremock/actions/workflows/build.yml)
+[![Version](https://img.shields.io/maven-central/v/io.quarkiverse.wiremock/quarkus-wiremock-parent?logo=apache-maven&style=for-the-badge)](https://search.maven.org/search?q=g:io.quarkiverse.wiremock%20AND%20a:quarkus-wiremock-parent)
+[![License](https://img.shields.io/github/license/quarkusio/quarkus?style=for-the-badge&logo=apache)](https://www.apache.org/licenses/LICENSE-2.0)
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
@@ -21,7 +22,7 @@ This Quarkus ``WireMock`` extension provides different version streams.
 ## Development instructions
 
 ### Git repo configuration (for Windows only)
-```properties
+```shell
 git config core.eol lf
 git config core.autocrlf input
 ```
