@@ -19,7 +19,7 @@ class WireMockTemplatingTest {
     private static final String APP_PROPERTIES = "application-templating.properties";
 
     @RegisterExtension
-    static final QuarkusUnitTest unitTest = new QuarkusUnitTest().withConfigurationResource(APP_PROPERTIES)
+    static final QuarkusUnitTest UNIT_TEST = new QuarkusUnitTest().withConfigurationResource(APP_PROPERTIES)
             .setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class));
 
     @Test
