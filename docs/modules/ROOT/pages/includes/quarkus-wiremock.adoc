@@ -86,5 +86,21 @@ endif::add-copy-button-to-env-var[]
 --|string
 |`src/test/resources`
 
+a|icon:lock[title=Fixed at build time] [[quarkus-wiremock_quarkus.wiremock.devservices.global-response-templating]]`link:#quarkus-wiremock_quarkus.wiremock.devservices.global-response-templating[quarkus.wiremock.devservices.global-response-templating]`
+
+[.description]
+--
+Response templating is enabled by default in WireMock 3,
+with this setting response templating can be enabled globally,
+see https://wiremock.org/3.x/docs/response-templating/[https://wiremock.org/3.x/docs/response-templating/]
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_WIREMOCK_DEVSERVICES_GLOBAL_RESPONSE_TEMPLATING+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++QUARKUS_WIREMOCK_DEVSERVICES_GLOBAL_RESPONSE_TEMPLATING+++`
+endif::add-copy-button-to-env-var[]
+--|boolean
+|`false`
 
 |===
