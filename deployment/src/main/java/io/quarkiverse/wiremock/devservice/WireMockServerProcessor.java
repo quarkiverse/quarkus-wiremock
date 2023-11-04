@@ -24,6 +24,7 @@ import io.quarkus.deployment.dev.devservices.GlobalDevServicesConfig;
 class WireMockServerProcessor {
     private static final Logger LOGGER = Logger.getLogger(WireMockServerProcessor.class);
     private static final String FEATURE_NAME = "wiremock";
+    private static final String DEV_SERVICE_NAME = "wiremock-server";
     private static final String CONFIG_TEMPLATE = "%%dev,test.%s.%s";
     static volatile RunningDevService devService;
 
@@ -62,7 +63,7 @@ class WireMockServerProcessor {
         final WireMockServer server = new WireMockServer(configuration);
         server.start();
 
-        return new RunningDevService(config.serviceName(), null, server::shutdown, getPropertyKey(PORT),
+        return new RunningDevService(DEV_SERVICE_NAME, null, server::shutdown, getPropertyKey(PORT),
                 String.valueOf(config.port()));
     }
 
