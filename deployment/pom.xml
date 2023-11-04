@@ -20,7 +20,7 @@
         </dependency>
         <dependency>
             <groupId>org.wiremock</groupId>
-            <artifactId>wiremock</artifactId>
+            <artifactId>wiremock-standalone</artifactId>
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
