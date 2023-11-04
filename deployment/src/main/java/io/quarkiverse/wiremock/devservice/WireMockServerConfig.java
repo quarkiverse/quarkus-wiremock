@@ -10,11 +10,6 @@ import io.smallrye.config.WithDefault;
 @ConfigMapping(prefix = PREFIX)
 @ConfigRoot(phase = ConfigPhase.BUILD_TIME)
 public interface WireMockServerConfig {
-    /**
-     * Name of the WireMock Dev Service.
-     */
-    @WithDefault("wiremock-server")
-    String serviceName();
 
     /**
      * If Dev Services for WireMock has been explicitly enabled or disabled.

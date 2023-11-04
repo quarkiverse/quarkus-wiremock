@@ -31,7 +31,6 @@ Example (default) configuration for testing and local development:
 %dev,test.quarkus.wiremock.devservices.reload=false
 %dev,test.quarkus.wiremock.devservices.files-mapping=src/test/resources
 %dev,test.quarkus.wiremock.devservices.port=8089
-%dev,test.quarkus.wiremock.devservices.service-name=wiremock-server
 %dev,test.quarkus.wiremock.devservices.global-response-templating=false
 ----
 
