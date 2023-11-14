@@ -53,7 +53,7 @@ ifndef::add-copy-button-to-env-var[]
 Environment variable: `+++QUARKUS_WIREMOCK_DEVSERVICES_RELOAD+++`
 endif::add-copy-button-to-env-var[]
 --|boolean
-|`false`
+|`true`
 
 a|icon:lock[title=Fixed at build time] [[quarkus-wiremock_quarkus.wiremock.devservices.files-mapping]]`link:#quarkus-wiremock_quarkus.wiremock.devservices.files-mapping[quarkus.wiremock.devservices.files-mapping]`
 
