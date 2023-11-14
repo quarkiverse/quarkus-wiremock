@@ -48,17 +48,16 @@ In addition, you might want to configure `WireMock` programmatically. To do so, 
 </dependency>
 ----
 
-After that, you are able to inject a `WireMock` reference along with your test execution lifecycle has shown below:
+After that, a `WireMock` reference can be injected along with your test execution lifecycle has shown below:
 [source,java]
 ----
 @QuarkusTest
-@QuarkusTestResource(WireMockServerTestResource.class)
+@ConnectWireMock
 class WireMockDevServiceResourceTest {
 
     private static final String MOCK_MSG = "Hello from WireMock!";
 
-    @InjectWireMock
-    WireMock wiremock;
+    WireMock wiremock; // will be injected automatically when the class has been annotated with @ConnectWireMock
 
     @Test
     void testHelloEndpoint() {

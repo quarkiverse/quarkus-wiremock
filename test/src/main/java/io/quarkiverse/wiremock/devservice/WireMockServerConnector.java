@@ -11,12 +11,12 @@ import org.jboss.logging.Logger;
 import com.github.tomakehurst.wiremock.client.WireMock;
 
 import io.quarkus.test.common.DevServicesContext;
-import io.quarkus.test.common.QuarkusTestResourceLifecycleManager;
+import io.quarkus.test.common.QuarkusTestResourceConfigurableLifecycleManager;
 
-public class WireMockServerTestResource
-        implements QuarkusTestResourceLifecycleManager, DevServicesContext.ContextAware {
+public class WireMockServerConnector
+        implements QuarkusTestResourceConfigurableLifecycleManager<ConnectWireMock>, DevServicesContext.ContextAware {
 
-    private static final Logger LOGGER = Logger.getLogger(WireMockServerTestResource.class);
+    private static final Logger LOGGER = Logger.getLogger(WireMockServerConnector.class);
     private static final String CONFIG_TEMPLATE = "%%dev,test.%s.%s";
     WireMock wiremock;
 
@@ -33,8 +33,7 @@ public class WireMockServerTestResource
 
     @Override
     public void inject(TestInjector testInjector) {
-        testInjector.injectIntoFields(wiremock,
-                new TestInjector.AnnotatedAndMatchesType(InjectWireMock.class, WireMock.class));
+        testInjector.injectIntoFields(wiremock, new TestInjector.MatchesType(WireMock.class));
     }
 
     @Override
