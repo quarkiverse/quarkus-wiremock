@@ -21,7 +21,7 @@ public interface WireMockServerConfig {
      * Indicates whether WireMock server needs to be restarted after Quarkus live reload (see development mode for more
      * information) or not.
      */
-    @WithDefault("false")
+    @WithDefault("true")
     boolean reload();
 
     /**

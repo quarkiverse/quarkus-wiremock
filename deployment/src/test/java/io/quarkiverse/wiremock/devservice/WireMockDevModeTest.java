@@ -16,6 +16,7 @@ import io.quarkus.test.QuarkusDevModeTest;
 import io.restassured.RestAssured;
 
 // Write your dev mode tests here - see the testing extension guide https://quarkus.io/guides/writing-extensions#testing-hot-reload for more information
+@SuppressWarnings("java:S5786")
 public class WireMockDevModeTest {
     private static final int DEV_MODE_PORT = 9099;
     private static final int DEV_MODE_PORT_MODIFIED = 9100;
@@ -28,10 +29,9 @@ public class WireMockDevModeTest {
                     .addAsResource(APP_PROPERTIES));
 
     @Test
-    public void testPortMappingViaLiveReload() {
+    void testPortMappingViaLiveReload() {
         assertTrue(isPortInUse(DEV_MODE_PORT), "WireMock DevService doesn't listen on port " + DEV_MODE_PORT);
 
-        RestAssured.get(BASE_URL + "/reload").then().body(equalTo("true"));
         DEV_MODE_TEST.modifyResourceFile(APP_PROPERTIES,
                 s -> s.replace("devservices.port=" + DEV_MODE_PORT, "devservices.port=" + DEV_MODE_PORT_MODIFIED));
 
