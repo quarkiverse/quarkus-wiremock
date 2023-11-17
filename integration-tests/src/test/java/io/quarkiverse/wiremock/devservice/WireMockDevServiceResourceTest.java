@@ -1,4 +1,4 @@
-package io.quarkiverse.wiremock.devservices;
+package io.quarkiverse.wiremock.devservice;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
@@ -11,19 +11,14 @@ import org.junit.jupiter.api.Test;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 
-import io.quarkiverse.wiremock.devservice.InjectWireMock;
-import io.quarkiverse.wiremock.devservice.WireMockServerTestResource;
-import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
 
 @QuarkusTest
-@QuarkusTestResource(WireMockServerTestResource.class)
+@ConnectWireMock
 class WireMockDevServiceResourceTest {
 
     private static final String MOCK_MSG = "Hello from WireMock!";
-
-    @InjectWireMock
-    WireMock wiremock;
+    WireMock wiremock; // will be injected automatically when the class has been annotated with @ConnectWireMock
 
     @Test
     void testHelloEndpoint() {
