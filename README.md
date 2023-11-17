@@ -15,10 +15,10 @@ Quarkus [WireMock](https://wiremock.org) extension for tests and local developme
 
 This Quarkus ``WireMock`` extension provides different version streams.
 
-| Quarkus WireMock    | WireMock | Quarkus Platform  | Documentation                                                                                                       |
-|---------------------|----------|-------------------|---------------------------------------------------------------------------------------------------------------------|
-| 0.x.x               | 2.35.x   | 2.16.x.Final      | [Quarkiverse Docs - Wiremock (0.x)](https://quarkiverse.github.io/quarkiverse-docs/quarkus-wiremock/0.x/index.html) |
-| 1.x.x (coming soon) | 3.x      | 3.2.x.Final (LTS) | [Quarkiverse Docs - Wiremock (dev)](https://quarkiverse.github.io/quarkiverse-docs/quarkus-wiremock/dev/index.html) |
+| Quarkus WireMock | WireMock | Quarkus Platform  | Documentation                                                                                                       |
+|------------------|----------|-------------------|---------------------------------------------------------------------------------------------------------------------|
+| 0.x.x            | 2.35.x   | 2.16.x.Final      | [Quarkiverse Docs - Wiremock (0.x)](https://quarkiverse.github.io/quarkiverse-docs/quarkus-wiremock/0.x/index.html) |
+| 1.x.x            | 3.x      | 3.2.x.Final (LTS) | [Quarkiverse Docs - Wiremock (dev)](https://quarkiverse.github.io/quarkiverse-docs/quarkus-wiremock/dev/index.html) |
 
 ## 🧑‍💻 Contributing
 
