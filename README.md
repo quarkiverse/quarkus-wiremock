@@ -24,7 +24,7 @@ This Quarkus ``WireMock`` extension provides different version streams.
 
 - Contribution is the best way to support and get involved in community!
 - Please, consult our [Code of Conduct](./CODE_OF_CONDUCT.md) policies for interacting in our community.
-- Contributions to `quarkus-wiremock` Please check our [CONTRIBUTING.md](./CONTRIBUTING.md)
+- Contributions to `quarkus-wiremock`, please check our [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ### If you have any idea or question 🤷
 
