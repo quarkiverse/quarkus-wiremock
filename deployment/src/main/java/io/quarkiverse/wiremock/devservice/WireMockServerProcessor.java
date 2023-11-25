@@ -13,18 +13,20 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 
 import io.quarkus.deployment.annotations.BuildStep;
+import io.quarkus.deployment.annotations.Consume;
 import io.quarkus.deployment.builditem.CuratedApplicationShutdownBuildItem;
 import io.quarkus.deployment.builditem.DevServicesResultBuildItem;
 import io.quarkus.deployment.builditem.DevServicesResultBuildItem.RunningDevService;
 import io.quarkus.deployment.builditem.FeatureBuildItem;
 import io.quarkus.deployment.builditem.LaunchModeBuildItem;
 import io.quarkus.deployment.builditem.LiveReloadBuildItem;
+import io.quarkus.deployment.dev.devservices.DevServiceDescriptionBuildItem;
 import io.quarkus.deployment.dev.devservices.GlobalDevServicesConfig;
 
 class WireMockServerProcessor {
     private static final Logger LOGGER = Logger.getLogger(WireMockServerProcessor.class);
     private static final String FEATURE_NAME = "wiremock";
-    private static final String DEV_SERVICE_NAME = "wiremock-server";
+    private static final String DEV_SERVICE_NAME = "WireMock";
     private static final String CONFIG_TEMPLATE = "%%dev,test.%s.%s";
     static volatile RunningDevService devService;
 
@@ -53,11 +55,16 @@ class WireMockServerProcessor {
         return devService.toBuildItem();
     }
 
+    @BuildStep(onlyIf = { WireMockServerEnabled.class, GlobalDevServicesConfig.Enabled.class })
+    @Consume(DevServicesResultBuildItem.class)
+    DevServiceDescriptionBuildItem renderDevServiceDevUICard(WireMockServerConfig config) {
+        return new DevServiceDescriptionBuildItem(DEV_SERVICE_NAME, null, devService.getConfig());
+    }
+
     private static RunningDevService startWireMockDevService(WireMockServerConfig config) {
 
         LOGGER.debugf("Starting WireMock server with port [%s] and path [%s]", config.port(), config.filesMapping());
-        final WireMockConfiguration configuration = options()
-                .port(config.port())
+        final WireMockConfiguration configuration = options().port(config.port())
                 .usingFilesUnderDirectory(config.filesMapping())
                 .globalTemplating(config.globalResponseTemplating());
         final WireMockServer server = new WireMockServer(configuration);

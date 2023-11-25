@@ -1,7 +1,7 @@
 ---
 name: "WireMock"
 artifact: ${project.groupId}:${project.artifactId}:${project.version}
-description: WireMock DevService for tests and local development
+description: WireMock Dev Service for tests and local development
 metadata:
   short-name: "wiremock"
   keywords:
