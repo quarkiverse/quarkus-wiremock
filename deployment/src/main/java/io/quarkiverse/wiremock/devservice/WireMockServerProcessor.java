@@ -1,8 +1,8 @@
 package io.quarkiverse.wiremock.devservice;
 
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
-import static io.quarkiverse.wiremock.devservice.WireMockDevServiceConfig.PORT;
-import static io.quarkiverse.wiremock.devservice.WireMockDevServiceConfig.PREFIX;
+import static io.quarkiverse.wiremock.devservice.WireMockConfigKey.PORT;
+import static java.lang.String.format;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -12,6 +12,8 @@ import org.jboss.logging.Logger;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 
+import io.quarkus.arc.deployment.ValidationPhaseBuildItem.ValidationErrorBuildItem;
+import io.quarkus.deployment.annotations.BuildProducer;
 import io.quarkus.deployment.annotations.BuildStep;
 import io.quarkus.deployment.annotations.Consume;
 import io.quarkus.deployment.builditem.CuratedApplicationShutdownBuildItem;
@@ -22,12 +24,15 @@ import io.quarkus.deployment.builditem.LaunchModeBuildItem;
 import io.quarkus.deployment.builditem.LiveReloadBuildItem;
 import io.quarkus.deployment.dev.devservices.DevServiceDescriptionBuildItem;
 import io.quarkus.deployment.dev.devservices.GlobalDevServicesConfig;
+import io.quarkus.runtime.configuration.ConfigurationException;
 
 class WireMockServerProcessor {
     private static final Logger LOGGER = Logger.getLogger(WireMockServerProcessor.class);
     private static final String FEATURE_NAME = "wiremock";
     private static final String DEV_SERVICE_NAME = "WireMock";
-    private static final String CONFIG_TEMPLATE = "%%dev,test.%s.%s";
+    private static final String CONFIG_TEMPLATE = "%%dev,test.%s";
+    private static final int MIN_PORT = 1025;
+    private static final int MAX_PORT = 65535;
     static volatile RunningDevService devService;
 
     @BuildStep
@@ -37,9 +42,17 @@ class WireMockServerProcessor {
 
     @BuildStep(onlyIf = { WireMockServerEnabled.class, GlobalDevServicesConfig.Enabled.class })
     DevServicesResultBuildItem setup(LaunchModeBuildItem launchMode, LiveReloadBuildItem liveReload,
-            CuratedApplicationShutdownBuildItem shutdown, WireMockServerConfig config) {
+            CuratedApplicationShutdownBuildItem shutdown, WireMockServerBuildTimeConfig config,
+            BuildProducer<ValidationErrorBuildItem> configErrors) {
 
         LOGGER.debugf("Quarkus launch mode [%s]", launchMode.getLaunchMode());
+
+        if (isPortConfigInvalid(config)) {
+            configErrors.produce(new ValidationErrorBuildItem(new ConfigurationException(
+                    format("The specified port %d is not part of the permitted port range! Please specify a port between %d and %d.",
+                            config.port().getAsInt(), MIN_PORT, MAX_PORT))));
+            return null;
+        }
 
         // register shutdown callback once
         shutdown.addCloseTask(WireMockServerProcessor::stopWireMockDevService, true);
@@ -57,21 +70,22 @@ class WireMockServerProcessor {
 
     @BuildStep(onlyIf = { WireMockServerEnabled.class, GlobalDevServicesConfig.Enabled.class })
     @Consume(DevServicesResultBuildItem.class)
-    DevServiceDescriptionBuildItem renderDevServiceDevUICard(WireMockServerConfig config) {
+    DevServiceDescriptionBuildItem renderDevServiceDevUICard(WireMockServerBuildTimeConfig config) {
         return new DevServiceDescriptionBuildItem(DEV_SERVICE_NAME, null, devService.getConfig());
     }
 
-    private static RunningDevService startWireMockDevService(WireMockServerConfig config) {
+    private static RunningDevService startWireMockDevService(WireMockServerBuildTimeConfig config) {
 
-        LOGGER.debugf("Starting WireMock server with port [%s] and path [%s]", config.port(), config.filesMapping());
-        final WireMockConfiguration configuration = options().port(config.port())
-                .usingFilesUnderDirectory(config.filesMapping())
+        final WireMockConfiguration configuration = options().usingFilesUnderDirectory(config.filesMapping())
                 .globalTemplating(config.globalResponseTemplating());
+        config.port().ifPresentOrElse(configuration::port, configuration::dynamicPort);
+
         final WireMockServer server = new WireMockServer(configuration);
         server.start();
+        LOGGER.debugf("WireMock server listening on port [%s]", server.port());
 
         return new RunningDevService(DEV_SERVICE_NAME, null, server::shutdown, getPropertyKey(PORT),
-                String.valueOf(config.port()));
+                String.valueOf(server.port()));
     }
 
     private static synchronized void stopWireMockDevService() {
@@ -89,8 +103,15 @@ class WireMockServerProcessor {
         }
     }
 
-    private static String getPropertyKey(String propertyName) {
-        return String.format(CONFIG_TEMPLATE, PREFIX, propertyName);
+    private static boolean isPortConfigInvalid(WireMockServerBuildTimeConfig config) {
+        if (config.port().isEmpty()) {
+            return false;
+        }
+        final int port = config.port().getAsInt();
+        return port < MIN_PORT || port > MAX_PORT;
     }
 
+    private static String getPropertyKey(String propertyName) {
+        return format(CONFIG_TEMPLATE, propertyName);
+    }
 }

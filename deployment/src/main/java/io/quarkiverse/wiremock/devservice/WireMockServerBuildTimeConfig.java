@@ -1,15 +1,16 @@
 package io.quarkiverse.wiremock.devservice;
 
-import static io.quarkiverse.wiremock.devservice.WireMockDevServiceConfig.PREFIX;
+import static io.quarkiverse.wiremock.devservice.WireMockConfigKey.PREFIX;
 
-import io.quarkus.runtime.annotations.ConfigPhase;
+import java.util.OptionalInt;
+
 import io.quarkus.runtime.annotations.ConfigRoot;
 import io.smallrye.config.ConfigMapping;
 import io.smallrye.config.WithDefault;
 
 @ConfigMapping(prefix = PREFIX)
-@ConfigRoot(phase = ConfigPhase.BUILD_TIME)
-public interface WireMockServerConfig {
+@ConfigRoot
+public interface WireMockServerBuildTimeConfig {
 
     /**
      * If Dev Services for WireMock has been explicitly enabled or disabled.
@@ -25,10 +26,11 @@ public interface WireMockServerConfig {
     boolean reload();
 
     /**
-     * Static fixed port of the WireMock server started via Dev Services.
+     * Optional fixed port the WireMock Dev Service will listen to.
+     * <p>
+     * If not defined, the port will be chosen randomly.
      */
-    @WithDefault("8089")
-    int port();
+    OptionalInt port();
 
     /**
      * Path to the WireMock configuration files
