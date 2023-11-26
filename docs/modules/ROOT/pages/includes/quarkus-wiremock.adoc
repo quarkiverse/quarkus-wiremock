@@ -28,7 +28,9 @@ a|icon:lock[title=Fixed at build time] [[quarkus-wiremock_quarkus.wiremock.devse
 
 [.description]
 --
-Optional fixed port the dev service will listen to.
+Optional fixed port the Dev Service will listen to. If not defined, the port will be chosen randomly.
+
+**WARNING**: Only ports between 1025 and 65535 are permitted.
 
 ifdef::add-copy-button-to-env-var[]
 Environment variable: env_var_with_copy_button:+++QUARKUS_wiremock_DEVSERVICES_PORT+++[]
@@ -37,7 +39,7 @@ ifndef::add-copy-button-to-env-var[]
 Environment variable: `+++QUARKUS_WIREMOCK_DEVSERVICES_PORT+++`
 endif::add-copy-button-to-env-var[]
 --|int
-|8089
+|
 
 a|icon:lock[title=Fixed at build time] [[quarkus-wiremock_quarkus.wiremock.devservices.reload]]`link:#quarkus-wiremock_quarkus.wiremock.devservices.reload[quarkus.wiremock.devservices.reload]`
 
@@ -75,8 +77,9 @@ a|icon:lock[title=Fixed at build time] [[quarkus-wiremock_quarkus.wiremock.devse
 [.description]
 --
 Response templating is enabled by default in WireMock 3,
-with this setting response templating can be enabled globally,
-see https://wiremock.org/3.x/docs/response-templating/[https://wiremock.org/3.x/docs/response-templating/]
+with this setting response templating can be enabled globally.
+
+Please refer to https://wiremock.org/3.x/docs/response-templating/[Response Templating] for more details.
 
 ifdef::add-copy-button-to-env-var[]
 Environment variable: env_var_with_copy_button:+++QUARKUS_WIREMOCK_DEVSERVICES_GLOBAL_RESPONSE_TEMPLATING+++[]

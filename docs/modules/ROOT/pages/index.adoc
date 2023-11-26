@@ -6,7 +6,7 @@ Quarkus https://wiremock.org[WireMock] extension for tests and local development
 
 == Installation
 
-If you want to use this extension, you need to add the `io.quarkiverse.wiremock:quarkus-wiremock` extension first to your build file.
+If you want to use this extension, you need to add the `io.quarkiverse.wiremock:quarkus-wiremock` dependency to your build file first.
 
 For instance, with Maven, add the following dependency to your POM file:
 
@@ -22,21 +22,25 @@ For instance, with Maven, add the following dependency to your POM file:
 
 == Usage
 
-TIP: The extension is designed to run in `dev` and `test` mode only! Please don't specify any attributes applicable for the `prod` profile, otherwise `unknown` property warnings will show up when executing the production build.
+IMPORTANT: This extension starts `WireMock` as a `Dev Service`, thus it is designed to run in `dev` and `test` mode only!
+Please don't specify any attributes applicable for other profiles (like `prod`), otherwise `unknown` property warnings could appear when executing the production build.
 
-Example (default) configuration for testing and local development:
+The extension comes with most reasonable defaults. However, it's recommended to use the https://quarkus.io/guides/config-reference#multiple-profiles[Multiple Profiles] syntax with the `dev` and `test` profile prefix when overriding configuration values:
 [source,properties]
 ----
-%dev,test.quarkus.wiremock.devservices.enabled=true
-%dev,test.quarkus.wiremock.devservices.reload=true
-%dev,test.quarkus.wiremock.devservices.files-mapping=src/test/resources
-%dev,test.quarkus.wiremock.devservices.port=8089
-%dev,test.quarkus.wiremock.devservices.global-response-templating=false
+# Use multiple profiles syntax when overriding configuration values
+%dev,test.quarkus.wiremock.devservices.reload=false
+%dev,test.quarkus.wiremock.devservices.global-response-templating=true
 ----
 
 == Testing
 
-In addition, you might want to configure `WireMock` programmatically. To do so, please add the following dependency to the target project:
+=== Stubbing & Verifying
+
+A core feature of WireMock is the ability to return HTTP responses for request matching criteria. You can configure stubs using JSON configuration files placed in the `mappings` and `__files` folders.
+The root location of these folders can be defined via `quarkus.wiremock.devservices.files-mapping`. By default the root location points to `src/test/resources`.
+
+In addition, you might want to configure `WireMock's` stubbing and request matching behavior programmatically. To do so, please add the following dependency to your target project:
 
 [source,xml,subs=attributes+]
 ----
@@ -48,7 +52,7 @@ In addition, you might want to configure `WireMock` programmatically. To do so, 
 </dependency>
 ----
 
-After that, a `WireMock` reference can be injected along with your test execution lifecycle has shown below:
+After that, a `WireMock` client reference can be injected along with your test execution lifecycle as shown below:
 [source,java]
 ----
 @QuarkusTest
@@ -57,7 +61,7 @@ class WireMockDevServiceResourceTest {
 
     private static final String MOCK_MSG = "Hello from WireMock!";
 
-    WireMock wiremock; // will be injected automatically when the class has been annotated with @ConnectWireMock
+    WireMock wiremock; // will be injected automatically when the test class is annotated with @ConnectWireMock
 
     @Test
     void testHelloEndpoint() {
@@ -70,7 +74,43 @@ class WireMockDevServiceResourceTest {
 }
 ----
 
-You can also reuse a `@QuarkusTest` as a `@QuarkusIntegrationTest`:
+TIP: For more details please refer to the WireMock https://wiremock.org/docs/stubbing/[Stubbing & Verifying] docs.
+
+=== Configuration retrieval
+
+This Quarkus extension exposes configuration keys via Java constants (`WireMockConfigKey`). By doing so, the config values can be accessed more easily:
+[source,java]
+----
+@QuarkusTest
+class WireMockDevServiceResourceTest {
+
+    // WireMockConfigKey is provided by the core module and does not require the `test` module dependency
+    @ConfigProperty(name = WireMockConfigKey.PORT)
+    Integer port; // the port WireMock server is listening on
+
+}
+----
+
+You can even access the WireMock `Dev Service` configuration values from within a Quarkus Integration Test:
+
+TIP: Please be aware that Dependency Injection (DI) is not supported for ITs!
+
+[source,java]
+----
+@QuarkusIntegrationTest
+class WireMockDevServiceResourceTest {
+
+    @Test
+    void testWireMockDevServiceConfigPropagation() {
+        // Dev Service config gets propagated and is accessible via the ConfigProvider API
+        int port = ConfigProvider.getConfig().getValue(WireMockConfigKey.PORT, Integer.class);
+        ...
+    }
+
+}
+----
+
+You can also reuse a `@QuarkusTest` as a `@QuarkusIntegrationTest` where applicable:
 [source,java]
 ----
 @QuarkusIntegrationTest
@@ -78,6 +118,15 @@ public class WireMockDevServiceResourceIT extends WireMockDevServiceResourceTest
     // re-use Quarkus tests as integration tests
 }
 ----
+
+Further more this extension supports the configuration capabilities of Quarkus. This means you can reference WireMock configuration keys
+within your custom properties via property expressions expansion.
+[source,properties]
+----
+%test.custom.config.wiremock.url=http://localhost:${quarkus.wiremock.devservices.port}/mock-me
+----
+
+Please refer to https://quarkus.io/guides/config-reference#property-expressions[Property Expressions] for further details.
 
 [[extension-configuration-reference]]
 == Extension Configuration Reference

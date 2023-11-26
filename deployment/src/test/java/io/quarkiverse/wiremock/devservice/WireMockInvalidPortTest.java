@@ -18,7 +18,7 @@ class WireMockInvalidPortTest {
             .withConfigurationResource(APP_PROPERTIES).setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class));
 
     @Test
-    void testPersistenceAndConfigTest() {
+    void youShallNotPass() {
         Assertions.fail(); // should not be called, deployment exception should happen first
     }
 }

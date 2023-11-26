@@ -19,7 +19,7 @@ import io.quarkus.test.junit.QuarkusIntegrationTest;
 class WireMockDevServiceBasicIT {
     WireMock wiremock; // will be injected automatically when the class has been annotated with @ConnectWireMock
 
-    // Quarkus can inject the Dev Service context even into integration test.
+    // Quarkus can inject the Dev Service context even into integration tests.
     // Please refer to https://quarkus.io/guides/getting-started-testing#testing-dev-services for more details.
     DevServicesContext devServicesContext;
 
@@ -35,12 +35,12 @@ class WireMockDevServiceBasicIT {
 
     @Test
     void testWireMockDevServiceConfigPropagation() {
-        // the Dev Service config gets propagated and is accessible via property names
-        Integer port = ConfigProvider.getConfig().getValue(WireMockConfigKey.PORT, Integer.class);
-        assertTrue(isPortInUse(port));
+        // Dev Service config gets propagated and is accessible via the config provider
+        int port = ConfigProvider.getConfig().getValue(WireMockConfigKey.PORT, Integer.class);
+        assertTrue(isInUse(port));
     }
 
-    private static boolean isPortInUse(int port) {
+    private static boolean isInUse(int port) {
         try (ServerSocket ignored = new ServerSocket(port)) {
             return false;
         } catch (IOException e) {

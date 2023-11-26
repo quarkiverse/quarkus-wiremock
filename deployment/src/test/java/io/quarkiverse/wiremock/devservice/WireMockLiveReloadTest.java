@@ -36,7 +36,7 @@ public class WireMockLiveReloadTest {
     @Test
     void testPortModificationViaLiveReload() {
 
-        assertFalse(isPortInUse(TARGET_STATIC_WIREMOCK_PORT),
+        assertFalse(isInUse(TARGET_STATIC_WIREMOCK_PORT),
                 "Port" + TARGET_STATIC_WIREMOCK_PORT + " is already in use!");
 
         // add port configuration to the properties file
@@ -49,11 +49,11 @@ public class WireMockLiveReloadTest {
         RestAssured.get(format("%s/config?name=%s", BASE_URL, PORT)).then()
                 .body(equalTo(String.valueOf(TARGET_STATIC_WIREMOCK_PORT)));
 
-        assertTrue(isPortInUse(TARGET_STATIC_WIREMOCK_PORT),
-                "WireMock DevService doesn't listen on port " + TARGET_STATIC_WIREMOCK_PORT);
+        assertTrue(isInUse(TARGET_STATIC_WIREMOCK_PORT),
+                "WireMock Dev Service doesn't listen on port " + TARGET_STATIC_WIREMOCK_PORT);
     }
 
-    private static boolean isPortInUse(int port) {
+    private static boolean isInUse(int port) {
         try (ServerSocket ignored = new ServerSocket(port)) {
             return false;
         } catch (IOException e) {

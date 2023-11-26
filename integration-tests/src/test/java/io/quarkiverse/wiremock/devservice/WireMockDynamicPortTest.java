@@ -41,7 +41,7 @@ class WireMockDynamicPortTest {
     }
 
     @Test
-    void testDynamicPortMappingPropagatedViaProperty() {
+    void testDynamicPortMappingPropagatedViaCustomProperty() {
         Assertions.assertNotNull(wiremock);
         wiremock.register(get(urlEqualTo("/mock-me")).willReturn(aResponse().withStatus(200).withBody(MOCK_MSG)));
         given().when().get(url).then().statusCode(200).body(is(MOCK_MSG));
