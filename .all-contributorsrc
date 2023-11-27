@@ -36,6 +36,15 @@
         "review",
         "doc"
       ]
+    },
+    {
+      "login": "oleg-nenashev",
+      "name": "Oleg Nenashev",
+      "avatar_url": "https://avatars.githubusercontent.com/u/3000480?v=4",
+      "profile": "https://linktr.ee/onenashev",
+      "contributions": [
+        "review"
+      ]
     }
   ],
   "contributorsPerLine": 7,
