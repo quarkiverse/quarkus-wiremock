@@ -4,7 +4,7 @@
 [![Version](https://img.shields.io/maven-central/v/io.quarkiverse.wiremock/quarkus-wiremock-parent?logo=apache-maven&style=for-the-badge)](https://search.maven.org/search?q=g:io.quarkiverse.wiremock%20AND%20a:quarkus-wiremock-parent)
 [![License](https://img.shields.io/github/license/quarkusio/quarkus?style=for-the-badge&logo=apache)](https://www.apache.org/licenses/LICENSE-2.0)
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ## Description
@@ -45,6 +45,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Spanjer1"><img src="https://avatars.githubusercontent.com/u/40360503?v=4?s=100" width="100px;" alt="Spanjer1"/><br /><sub><b>Spanjer1</b></sub></a><br /><a href="https://github.com/quarkiverse/quarkus-wiremock/commits?author=Spanjer1" title="Code">💻</a> <a href="#maintenance-Spanjer1" title="Maintenance">🚧</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://techspace.de"><img src="https://avatars.githubusercontent.com/u/3606282?v=4?s=100" width="100px;" alt="Christian Berger"/><br /><sub><b>Christian Berger</b></sub></a><br /><a href="https://github.com/quarkiverse/quarkus-wiremock/commits?author=chberger" title="Code">💻</a> <a href="#maintenance-chberger" title="Maintenance">🚧</a> <a href="https://github.com/quarkiverse/quarkus-wiremock/commits?author=chberger" title="Documentation">📖</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://wjglerum.nl"><img src="https://avatars.githubusercontent.com/u/7404187?v=4?s=100" width="100px;" alt="Willem Jan Glerum"/><br /><sub><b>Willem Jan Glerum</b></sub></a><br /><a href="https://github.com/quarkiverse/quarkus-wiremock/commits?author=wjglerum" title="Code">💻</a> <a href="https://github.com/quarkiverse/quarkus-wiremock/pulls?q=is%3Apr+reviewed-by%3Awjglerum" title="Reviewed Pull Requests">👀</a> <a href="https://github.com/quarkiverse/quarkus-wiremock/commits?author=wjglerum" title="Documentation">📖</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://linktr.ee/onenashev"><img src="https://avatars.githubusercontent.com/u/3000480?v=4?s=100" width="100px;" alt="Oleg Nenashev"/><br /><sub><b>Oleg Nenashev</b></sub></a><br /><a href="https://github.com/quarkiverse/quarkus-wiremock/pulls?q=is%3Apr+reviewed-by%3Aoleg-nenashev" title="Reviewed Pull Requests">👀</a></td>
     </tr>
   </tbody>
 </table>
