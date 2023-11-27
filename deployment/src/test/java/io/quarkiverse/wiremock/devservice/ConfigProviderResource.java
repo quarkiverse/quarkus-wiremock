@@ -1,12 +1,10 @@
 package io.quarkiverse.wiremock.devservice;
 
-import static io.quarkiverse.wiremock.devservice.WireMockDevServiceConfig.PREFIX;
-
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 
 import org.eclipse.microprofile.config.ConfigProvider;
@@ -15,10 +13,10 @@ import org.eclipse.microprofile.config.ConfigProvider;
 @ApplicationScoped
 class ConfigProviderResource {
 
-    @Path("/devservices/{property}")
+    @Path("/devservices/config")
     @GET
     @Produces(MediaType.TEXT_PLAIN)
-    public String getValue(@PathParam("property") String property) {
-        return ConfigProvider.getConfig().getValue(PREFIX + "." + property, String.class);
+    public String getConfigValue(@QueryParam("name") String propertyName) {
+        return ConfigProvider.getConfig().getValue(propertyName, String.class);
     }
 }

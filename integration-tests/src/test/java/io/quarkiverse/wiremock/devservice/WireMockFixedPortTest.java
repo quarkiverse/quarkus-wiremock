@@ -11,21 +11,23 @@ import org.junit.jupiter.api.Test;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 
+import io.quarkiverse.wiremock.devservice.Profile.FixedPort;
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.TestProfile;
 
 @QuarkusTest
 @ConnectWireMock
-class WireMockDevServiceResourceTest {
-
+@TestProfile(FixedPort.class)
+class WireMockFixedPortTest {
     private static final String MOCK_MSG = "Hello from WireMock!";
     WireMock wiremock; // will be injected automatically when the class has been annotated with @ConnectWireMock
 
     @Test
-    void testHelloEndpoint() {
+    void testFixedPortMapping() {
         Assertions.assertNotNull(wiremock);
         wiremock.register(get(urlEqualTo("/mock-me")).willReturn(aResponse().withStatus(200).withBody(MOCK_MSG)));
-
-        given().when().get("/hello").then().statusCode(200).body(is(MOCK_MSG));
+        given().when().get(String.format("http://localhost:%s/mock-me", FixedPort.PORT)).then().statusCode(200)
+                .body(is(MOCK_MSG));
     }
 
 }

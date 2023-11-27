@@ -1,7 +1,6 @@
 package io.quarkiverse.wiremock.devservice;
 
-import static io.quarkiverse.wiremock.devservice.WireMockDevServiceConfig.PORT;
-import static io.quarkiverse.wiremock.devservice.WireMockDevServiceConfig.PREFIX;
+import static io.quarkiverse.wiremock.devservice.WireMockConfigKey.PORT;
 
 import java.util.Collections;
 import java.util.Map;
@@ -17,12 +16,13 @@ public class WireMockServerConnector
         implements QuarkusTestResourceConfigurableLifecycleManager<ConnectWireMock>, DevServicesContext.ContextAware {
 
     private static final Logger LOGGER = Logger.getLogger(WireMockServerConnector.class);
-    private static final String CONFIG_TEMPLATE = "%%dev,test.%s.%s";
+    private static final String CONFIG_TEMPLATE = "%%dev,test.%s";
     WireMock wiremock;
 
     @Override
     public Map<String, String> start() {
         // nothing to do, since the Dev Service has already started the server
+        // and the Dev Service configuration will be propagated by Quarkus automatically.
         return Collections.emptyMap();
     }
 
@@ -39,18 +39,18 @@ public class WireMockServerConnector
     @Override
     public void setIntegrationTestContext(DevServicesContext context) {
         final Map<String, String> devContext = context.devServicesProperties();
-        int port = Integer.parseInt(devContext.get(getPropertyKey(PORT)));
         try {
+            int port = Integer.parseInt(devContext.get(getPropertyKey(PORT)));
             wiremock = new WireMock(port);
             wiremock.getGlobalSettings(); // establish a connection to WireMock server eagerly
         } catch (Exception ex) {
-            LOGGER.error("WireMock server not found! It should run as Dev Service.", ex);
+            LOGGER.error("Cannot connect to WireMock server!", ex);
             throw ex;
         }
     }
 
     private static String getPropertyKey(String propertyName) {
-        return String.format(CONFIG_TEMPLATE, PREFIX, propertyName);
+        return String.format(CONFIG_TEMPLATE, propertyName);
     }
 
 }

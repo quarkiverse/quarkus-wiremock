@@ -1,7 +1,6 @@
 package io.quarkiverse.wiremock.devservice;
 
-import static io.quarkiverse.wiremock.devservice.WireMockDevServiceConfig.PORT;
-import static io.quarkiverse.wiremock.devservice.WireMockDevServiceConfig.PREFIX;
+import static io.quarkiverse.wiremock.devservice.WireMockConfigKey.PORT;
 import static org.hamcrest.Matchers.is;
 import static org.jboss.resteasy.reactive.RestResponse.StatusCode.OK;
 
@@ -24,7 +23,7 @@ class WireMockTemplatingTest {
 
     @Test
     void testTemplatingEnabled() {
-        final int port = ConfigProvider.getConfig().getValue(PREFIX + "." + PORT, Integer.class);
+        final int port = ConfigProvider.getConfig().getValue(PORT, Integer.class);
         RestAssured.when().get(String.format("http://localhost:%d/template", port)).then().statusCode(OK)
                 .body(is(String.format("Everything was just fine from %d!", port)));
     }
