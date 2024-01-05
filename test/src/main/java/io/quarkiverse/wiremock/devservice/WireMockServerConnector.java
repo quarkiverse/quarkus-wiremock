@@ -16,7 +16,6 @@ public class WireMockServerConnector
         implements QuarkusTestResourceConfigurableLifecycleManager<ConnectWireMock>, DevServicesContext.ContextAware {
 
     private static final Logger LOGGER = Logger.getLogger(WireMockServerConnector.class);
-    private static final String CONFIG_TEMPLATE = "%%dev,test.%s";
     WireMock wiremock;
 
     @Override
@@ -40,17 +39,13 @@ public class WireMockServerConnector
     public void setIntegrationTestContext(DevServicesContext context) {
         final Map<String, String> devContext = context.devServicesProperties();
         try {
-            int port = Integer.parseInt(devContext.get(getPropertyKey(PORT)));
+            int port = Integer.parseInt(devContext.get(PORT));
             wiremock = new WireMock(port);
             wiremock.getGlobalSettings(); // establish a connection to WireMock server eagerly
         } catch (Exception ex) {
             LOGGER.error("Cannot connect to WireMock server!", ex);
             throw ex;
         }
-    }
-
-    private static String getPropertyKey(String propertyName) {
-        return String.format(CONFIG_TEMPLATE, propertyName);
     }
 
 }
