@@ -3,6 +3,7 @@ package io.quarkiverse.wiremock.devservice;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static io.quarkiverse.wiremock.devservice.WireMockConfigKey.PORT;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.is;
 
@@ -26,10 +27,10 @@ class WireMockDynamicPortTest {
     private static final String MOCK_MSG = "Hello from WireMock!";
     WireMock wiremock; // will be injected automatically when the class has been annotated with @ConnectWireMock
 
-    @ConfigProperty(name = WireMockConfigKey.PORT)
+    @ConfigProperty(name = PORT)
     Integer port;
 
-    @ConfigProperty(name = "custom.config.wiremock.url")
+    @ConfigProperty(name = "custom.config.wiremock.url") // test property interpolation
     URL url;
 
     @Test

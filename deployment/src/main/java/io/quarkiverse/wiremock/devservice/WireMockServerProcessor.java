@@ -30,7 +30,6 @@ class WireMockServerProcessor {
     private static final Logger LOGGER = Logger.getLogger(WireMockServerProcessor.class);
     private static final String FEATURE_NAME = "wiremock";
     private static final String DEV_SERVICE_NAME = "WireMock";
-    private static final String CONFIG_TEMPLATE = "%%dev,test.%s";
     private static final int MIN_PORT = 1025;
     private static final int MAX_PORT = 65535;
     static volatile RunningDevService devService;
@@ -84,7 +83,7 @@ class WireMockServerProcessor {
         server.start();
         LOGGER.debugf("WireMock server listening on port [%s]", server.port());
 
-        return new RunningDevService(DEV_SERVICE_NAME, null, server::shutdown, getPropertyKey(PORT),
+        return new RunningDevService(DEV_SERVICE_NAME, null, server::shutdown, PORT,
                 String.valueOf(server.port()));
     }
 
@@ -92,7 +91,7 @@ class WireMockServerProcessor {
         try {
             if (devService != null) {
                 LOGGER.debugf("Stopping WireMock server running on port %s",
-                        devService.getConfig().get(getPropertyKey(PORT)));
+                        devService.getConfig().get(PORT));
                 devService.close();
             }
         } catch (IOException e) {
@@ -111,7 +110,4 @@ class WireMockServerProcessor {
         return port < MIN_PORT || port > MAX_PORT;
     }
 
-    private static String getPropertyKey(String propertyName) {
-        return format(CONFIG_TEMPLATE, propertyName);
-    }
 }
