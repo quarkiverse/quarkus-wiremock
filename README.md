@@ -1,8 +1,14 @@
+<div align="center">
+<img alt="Quarkus Logo" src="docs/modules/ROOT/assets/images/quarkus.svg" height="70" ><img src="docs/modules/ROOT/assets/images/plus-sign.svg" height="70" ><img src="docs/modules/ROOT/assets/images/wiremock.svg" height="70" >
+
 # Quarkus - WireMock
+</div>
+<br>
 
 [![GitHub Actions Status](https://img.shields.io/github/actions/workflow/status/quarkiverse/quarkus-wiremock/build.yml?branch=main&logo=GitHub&style=for-the-badge)](https://github.com/quarkiverse/quarkus-wiremock/actions/workflows/build.yml)
 [![Version](https://img.shields.io/maven-central/v/io.quarkiverse.wiremock/quarkus-wiremock-parent?logo=apache-maven&style=for-the-badge)](https://search.maven.org/search?q=g:io.quarkiverse.wiremock%20AND%20a:quarkus-wiremock-parent)
 [![License](https://img.shields.io/github/license/quarkusio/quarkus?style=for-the-badge&logo=apache)](https://www.apache.org/licenses/LICENSE-2.0)
+
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
