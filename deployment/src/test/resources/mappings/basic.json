@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "GET",
-    "url": "/wiremock"
+    "url": "/basic"
   },
   "response": {
     "status": 200,
