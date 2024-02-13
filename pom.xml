@@ -4,7 +4,7 @@
     <parent>
         <groupId>io.quarkiverse</groupId>
         <artifactId>quarkiverse-parent</artifactId>
-        <version>15</version>
+        <version>16</version>
     </parent>
     <groupId>io.quarkiverse.wiremock</groupId>
     <artifactId>quarkus-wiremock-parent</artifactId>
@@ -25,7 +25,7 @@
       <tag>HEAD</tag>
   </scm>
     <properties>
-        <maven.compiler.release>11</maven.compiler.release>
+        <maven.compiler.release>17</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <quarkus.version>3.2.10.Final</quarkus.version>
