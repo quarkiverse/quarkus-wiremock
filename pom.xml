@@ -14,9 +14,7 @@
     <modules>
         <module>deployment</module>
         <module>runtime</module>
-        <module>docs</module>
         <module>test</module>
-        <module>integration-tests</module>
     </modules>
     <scm>
         <connection>scm:git:git@github.com:quarkiverse/quarkus-wiremock.git</connection>
@@ -58,4 +56,19 @@
             </plugins>
         </pluginManagement>
     </build>
+    <profiles>
+        <profile>
+            <id>default</id>
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>!true</value>
+                </property>
+            </activation>
+            <modules>
+                <module>docs</module>
+                <module>integration-tests</module>
+            </modules>
+        </profile>
+    </profiles>
 </project>
