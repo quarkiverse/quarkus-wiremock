@@ -23,8 +23,19 @@ This Quarkus ``WireMock`` extension provides different version streams.
 
 | Quarkus WireMock | WireMock | Quarkus Platform  | Documentation                                                                                                       |
 |------------------|----------|-------------------|---------------------------------------------------------------------------------------------------------------------|
-| 0.x.x            | 2.35.x   | 2.16.x.Final      | [Quarkiverse Docs - Wiremock (0.x)](https://quarkiverse.github.io/quarkiverse-docs/quarkus-wiremock/0.x/index.html) |
+| ~~0.x.x~~            | ~~2.35.x~~   | ~~2.16.x.Final~~      | [~~Quarkiverse Docs - Wiremock (0.x)~~](https://quarkiverse.github.io/quarkiverse-docs/quarkus-wiremock/0.x/index.html) |
 | 1.x.x            | 3.x      | 3.2.x.Final (LTS) | [Quarkiverse Docs - Wiremock (dev)](https://quarkiverse.github.io/quarkiverse-docs/quarkus-wiremock/dev/index.html) |
+
+## 🚀 Quarkus WireMock Extension in Action
+
+Interested in seeing this extension in action? It's currently being used in the official [Quarkus Super Heroes](https://github.com/quarkusio/quarkus-super-heroes) 
+project. This provides a practical example of how this extension can be integrated into your Quarkus applications, 
+demonstrating its utility and ease of use. 
+
+By exploring the [Super Heroes](https://github.com/quarkusio/quarkus-super-heroes) 
+project, you'll get a firsthand look at the benefits of this extension offers. It's an excellent way to understand its 
+features in a live environment. Check out the [Quarkus Super Heroes](https://github.com/quarkusio/quarkus-super-heroes) 
+project to see this extension at work!
 
 ## 🧑‍💻 Contributing
 
