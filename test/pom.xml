@@ -4,7 +4,7 @@
     <parent>
         <groupId>io.quarkiverse.wiremock</groupId>
         <artifactId>quarkus-wiremock-parent</artifactId>
-        <version>1.2.1-SNAPSHOT</version>
+        <version>1.3.0</version>
     </parent>
     <artifactId>quarkus-wiremock-test</artifactId>
     <name>WireMock - Test</name>
