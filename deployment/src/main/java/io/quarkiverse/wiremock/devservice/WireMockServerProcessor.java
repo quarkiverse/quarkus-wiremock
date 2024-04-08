@@ -96,7 +96,8 @@ class WireMockServerProcessor {
     private static RunningDevService startWireMockDevService(WireMockServerBuildTimeConfig config) {
 
         final WireMockConfiguration configuration = options().usingFilesUnderDirectory(config.filesMapping())
-                .globalTemplating(config.globalResponseTemplating());
+                .globalTemplating(config.globalResponseTemplating())
+                .extensionScanningEnabled(config.extensionScanningEnabled());
         config.port().ifPresentOrElse(configuration::port, configuration::dynamicPort);
 
         final WireMockServer server = new WireMockServer(configuration);

@@ -1,0 +1,14 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/custom-variable"
+  },
+  "response": {
+    "status": 200,
+    "body": "Response is {{ parameters.custom }}!",
+    "transformers": ["custom-transformer"],
+    "transformerParameters": {
+      "custom": "test"
+    }
+  }
+}
