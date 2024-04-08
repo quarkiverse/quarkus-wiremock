@@ -33,7 +33,8 @@ public interface WireMockServerBuildTimeConfig {
     OptionalInt port();
 
     /**
-     * Path to the WireMock configuration files
+     * Path to the WireMock configuration files.
+     * If this starts with {@code classpath:} then files will be looked up on the classpath instead of the filesystem
      */
     @WithDefault("src/test/resources")
     String filesMapping();
@@ -54,4 +55,16 @@ public interface WireMockServerBuildTimeConfig {
      */
     @WithDefault("false")
     boolean extensionScanningEnabled();
+
+    default boolean isClasspathFilesMapping() {
+        return filesMapping().startsWith("classpath:");
+    }
+
+    default String effectiveFileMapping() {
+        if (isClasspathFilesMapping()) {
+            int index = filesMapping().indexOf(':');
+            return filesMapping().substring(index + 1);
+        }
+        return filesMapping();
+    }
 }

@@ -17,6 +17,7 @@ import java.util.stream.Stream;
 import org.jboss.logging.Logger;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.common.ClasspathFileSource;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 
 import io.quarkus.arc.deployment.ValidationPhaseBuildItem.ValidationErrorBuildItem;
@@ -87,18 +88,30 @@ class WireMockServerProcessor {
     @BuildStep(onlyIf = { WireMockServerEnabled.class, GlobalDevServicesConfig.Enabled.class, IsDevelopment.class })
     void watchWireMockConfigFiles(WireMockServerBuildTimeConfig config,
             BuildProducer<HotDeploymentWatchedFileBuildItem> items) {
-        listFiles(Paths.get(config.filesMapping(), MAPPINGS), Paths.get(config.filesMapping(), FILES)).forEach(file -> {
-            LOGGER.debugf("Watching [%s] for hot deployment!", file);
-            items.produce(new HotDeploymentWatchedFileBuildItem(file));
-        });
+
+        if (!config.isClasspathFilesMapping()) {
+            listFiles(Paths.get(config.effectiveFileMapping(), MAPPINGS), Paths.get(config.effectiveFileMapping(), FILES))
+                    .forEach(file -> {
+                        LOGGER.debugf("Watching [%s] for hot deployment!", file);
+                        items.produce(new HotDeploymentWatchedFileBuildItem(file));
+                    });
+        }
     }
 
     private static RunningDevService startWireMockDevService(WireMockServerBuildTimeConfig config) {
 
-        final WireMockConfiguration configuration = options().usingFilesUnderDirectory(config.filesMapping())
+        final WireMockConfiguration configuration = options()
                 .globalTemplating(config.globalResponseTemplating())
                 .extensionScanningEnabled(config.extensionScanningEnabled());
         config.port().ifPresentOrElse(configuration::port, configuration::dynamicPort);
+
+        if (config.isClasspathFilesMapping()) {
+            configuration
+                    .fileSource(new ClasspathFileSource(Thread.currentThread().getContextClassLoader(),
+                            config.effectiveFileMapping()));
+        } else {
+            configuration.usingFilesUnderDirectory(config.effectiveFileMapping());
+        }
 
         final WireMockServer server = new WireMockServer(configuration);
         server.start();

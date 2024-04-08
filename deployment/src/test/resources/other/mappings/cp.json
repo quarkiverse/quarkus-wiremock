@@ -1,0 +1,10 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/cp"
+  },
+  "response": {
+    "status": 200,
+    "body": "All good from {{ request.port }}!"
+  }
+}
