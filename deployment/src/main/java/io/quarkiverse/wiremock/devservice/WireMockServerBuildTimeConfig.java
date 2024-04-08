@@ -45,4 +45,13 @@ public interface WireMockServerBuildTimeConfig {
      */
     @WithDefault("false")
     boolean globalResponseTemplating();
+
+    /**
+     * Control whether WireMock Extension <a href=
+     * "https://wiremock.org/docs/extending-wiremock/#extension-registration-via-service-loading">service
+     * loading</a>,
+     * is enabled
+     */
+    @WithDefault("false")
+    boolean extensionScanningEnabled();
 }
