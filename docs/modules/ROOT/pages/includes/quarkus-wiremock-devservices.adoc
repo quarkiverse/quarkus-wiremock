@@ -1,0 +1,118 @@
+
+:summaryTableId: quarkus-wiremock-devservices
+[.configuration-legend]
+icon:lock[title=Fixed at build time] Configuration property fixed at build time - All other configuration properties are overridable at runtime
+[.configuration-reference.searchable, cols="80,.^10,.^10"]
+|===
+
+h|[[quarkus-wiremock-devservices_configuration]]link:#quarkus-wiremock-devservices_configuration[Configuration property]
+
+h|Type
+h|Default
+
+a|icon:lock[title=Fixed at build time] [[quarkus-wiremock-devservices_quarkus-wiremock-devservices-enabled]]`link:#quarkus-wiremock-devservices_quarkus-wiremock-devservices-enabled[quarkus.wiremock.devservices.enabled]`
+
+
+[.description]
+--
+If Dev Services for WireMock has been explicitly enabled or disabled.
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_WIREMOCK_DEVSERVICES_ENABLED+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++QUARKUS_WIREMOCK_DEVSERVICES_ENABLED+++`
+endif::add-copy-button-to-env-var[]
+--|boolean 
+|`true`
+
+
+a|icon:lock[title=Fixed at build time] [[quarkus-wiremock-devservices_quarkus-wiremock-devservices-reload]]`link:#quarkus-wiremock-devservices_quarkus-wiremock-devservices-reload[quarkus.wiremock.devservices.reload]`
+
+
+[.description]
+--
+Restart WireMock Dev Service whenever Quarkus is reloaded. Otherwise, whenever files are changed in the `files-mapping` location you would need to restart the Dev Service (WireMock server) manually.
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_WIREMOCK_DEVSERVICES_RELOAD+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++QUARKUS_WIREMOCK_DEVSERVICES_RELOAD+++`
+endif::add-copy-button-to-env-var[]
+--|boolean 
+|`true`
+
+
+a|icon:lock[title=Fixed at build time] [[quarkus-wiremock-devservices_quarkus-wiremock-devservices-port]]`link:#quarkus-wiremock-devservices_quarkus-wiremock-devservices-port[quarkus.wiremock.devservices.port]`
+
+
+[.description]
+--
+Optional fixed port the WireMock Dev Service will listen to. If not defined, the port will be chosen randomly.
+
+*WARNING:* Only ports between 1025 and 65535 are permitted.
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_WIREMOCK_DEVSERVICES_PORT+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++QUARKUS_WIREMOCK_DEVSERVICES_PORT+++`
+endif::add-copy-button-to-env-var[]
+--|int 
+|
+
+
+a|icon:lock[title=Fixed at build time] [[quarkus-wiremock-devservices_quarkus-wiremock-devservices-files-mapping]]`link:#quarkus-wiremock-devservices_quarkus-wiremock-devservices-files-mapping[quarkus.wiremock.devservices.files-mapping]`
+
+
+[.description]
+--
+Path to the WireMock configuration files (root dir which contains the `mappings` and `__files` folders). If this starts with `classpath:` then files will be looked up on the classpath instead of the filesystem.
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_WIREMOCK_DEVSERVICES_FILES_MAPPING+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++QUARKUS_WIREMOCK_DEVSERVICES_FILES_MAPPING+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|`src/test/resources`
+
+
+a|icon:lock[title=Fixed at build time] [[quarkus-wiremock-devservices_quarkus-wiremock-devservices-global-response-templating]]`link:#quarkus-wiremock-devservices_quarkus-wiremock-devservices-global-response-templating[quarkus.wiremock.devservices.global-response-templating]`
+
+
+[.description]
+--
+Response templating is enabled by default in WireMock 3, with this setting response templating can be enabled globally.
+
+Please refer to link:https://wiremock.org/3.x/docs/response-templating/[Response Templating] for more details.
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_WIREMOCK_DEVSERVICES_GLOBAL_RESPONSE_TEMPLATING+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++QUARKUS_WIREMOCK_DEVSERVICES_GLOBAL_RESPONSE_TEMPLATING+++`
+endif::add-copy-button-to-env-var[]
+--|boolean 
+|`false`
+
+
+a|icon:lock[title=Fixed at build time] [[quarkus-wiremock-devservices_quarkus-wiremock-devservices-extension-scanning-enabled]]`link:#quarkus-wiremock-devservices_quarkus-wiremock-devservices-extension-scanning-enabled[quarkus.wiremock.devservices.extension-scanning-enabled]`
+
+
+[.description]
+--
+Control whether WireMock Extension link:https://wiremock.org/docs/extending-wiremock/#extension-registration-via-service-loading[service loading], is enabled.
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_WIREMOCK_DEVSERVICES_EXTENSION_SCANNING_ENABLED+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++QUARKUS_WIREMOCK_DEVSERVICES_EXTENSION_SCANNING_ENABLED+++`
+endif::add-copy-button-to-env-var[]
+--|boolean 
+|`false`
+
+|===
