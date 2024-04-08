@@ -65,7 +65,7 @@
                             <resources>
                                 <resource>
                                     <directory>${project.basedir}/../target/asciidoc/generated/config/</directory>
-                                    <include>quarkus-my-ext.adoc</include>
+                                    <include>quarkus-wiremock-devservices.adoc</include>
                                     <filtering>false</filtering>
                                 </resource>
                                 <resource>

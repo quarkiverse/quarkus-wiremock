@@ -139,4 +139,4 @@ TIP: Please refer to https://quarkus.io/guides/config-reference#property-express
 [[extension-configuration-reference]]
 == Extension Configuration Reference
 
-include::includes/quarkus-wiremock.adoc[leveloffset=+1, opts=optional]
+include::includes/quarkus-wiremock-devservices.adoc[leveloffset=+1, opts=optional]
