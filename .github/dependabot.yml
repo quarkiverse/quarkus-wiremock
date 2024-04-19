@@ -11,9 +11,9 @@ updates:
       interval: "daily"
     ignore:
       - dependency-name: "org.apache.maven.plugins:maven-compiler-plugin"
-        # For Quarkus, ignore all minor updates to stay on LTS stream
-      - dependency-name: "io.quarkus:quarkus-bom"
-        update-types: ["version-update:semver-minor"]
+      - dependency-name: "io.quarkus.platform:*"
+        # Stay on Quarkus 3.8.x LTS stream
+        versions: [ ">= 3.9.0" ]
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
