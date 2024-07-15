@@ -18,6 +18,7 @@ import org.jboss.logging.Logger;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.common.ClasspathFileSource;
+import com.github.tomakehurst.wiremock.common.Notifier;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 
 import io.quarkus.arc.deployment.ValidationPhaseBuildItem.ValidationErrorBuildItem;
@@ -102,7 +103,8 @@ class WireMockServerProcessor {
 
         final WireMockConfiguration configuration = options()
                 .globalTemplating(config.globalResponseTemplating())
-                .extensionScanningEnabled(config.extensionScanningEnabled());
+                .extensionScanningEnabled(config.extensionScanningEnabled())
+                .notifier(new JBossNotifier());
         config.port().ifPresentOrElse(configuration::port, configuration::dynamicPort);
 
         if (config.isClasspathFilesMapping()) {
@@ -156,4 +158,20 @@ class WireMockServerProcessor {
         }
     }
 
+    private static class JBossNotifier implements Notifier {
+        private static final Logger LOGGER = Logger
+                .getLogger(WireMockServerProcessor.class.getPackageName() + ".WireMockServer");
+
+        public void info(String message) {
+            LOGGER.info(message);
+        }
+
+        public void error(String message) {
+            LOGGER.error(message);
+        }
+
+        public void error(String message, Throwable t) {
+            LOGGER.error(message, t);
+        }
+    }
 }
