@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -34,6 +35,7 @@ import io.quarkus.deployment.builditem.LaunchModeBuildItem;
 import io.quarkus.deployment.builditem.LiveReloadBuildItem;
 import io.quarkus.deployment.dev.devservices.DevServiceDescriptionBuildItem;
 import io.quarkus.deployment.dev.devservices.GlobalDevServicesConfig;
+import io.quarkus.devui.spi.buildtime.FooterLogBuildItem;
 import io.quarkus.runtime.configuration.ConfigurationException;
 
 class WireMockServerProcessor {
@@ -54,7 +56,8 @@ class WireMockServerProcessor {
     @BuildStep(onlyIf = { WireMockServerEnabled.class, GlobalDevServicesConfig.Enabled.class })
     DevServicesResultBuildItem setup(LaunchModeBuildItem launchMode, LiveReloadBuildItem liveReload,
             CuratedApplicationShutdownBuildItem shutdown, WireMockServerBuildTimeConfig config,
-            BuildProducer<ValidationErrorBuildItem> configErrors) {
+            BuildProducer<ValidationErrorBuildItem> configErrors,
+            BuildProducer<FooterLogBuildItem> footerLogProducer) {
 
         LOGGER.debugf("Quarkus launch mode [%s]", launchMode.getLaunchMode());
 
@@ -74,7 +77,13 @@ class WireMockServerProcessor {
         }
 
         if (devService == null) {
-            devService = startWireMockDevService(config);
+            if (launchMode.getLaunchMode().isDevOrTest()) {
+                LogPublisher logPublisher = new LogPublisher();
+                devService = startWireMockDevService(config, Optional.of(logPublisher));
+                footerLogProducer.produce(new FooterLogBuildItem("WireMock", () -> logPublisher));
+            } else {
+                devService = startWireMockDevService(config, Optional.empty());
+            }
         }
         return devService.toBuildItem();
     }
@@ -98,7 +107,8 @@ class WireMockServerProcessor {
         }
     }
 
-    private static RunningDevService startWireMockDevService(WireMockServerBuildTimeConfig config) {
+    private static RunningDevService startWireMockDevService(WireMockServerBuildTimeConfig config,
+            Optional<LogPublisher> logPublisher) {
 
         final WireMockConfiguration configuration = options()
                 .globalTemplating(config.globalResponseTemplating())
@@ -111,6 +121,11 @@ class WireMockServerProcessor {
                             config.effectiveFileMapping()));
         } else {
             configuration.usingFilesUnderDirectory(config.effectiveFileMapping());
+        }
+
+        if (logPublisher.isPresent()) {
+            java.util.logging.Logger wireMockLogger = java.util.logging.Logger.getLogger("com.github.tomakehurst.wiremock");
+            wireMockLogger.addHandler(new LogPublisher.LogHandler(logPublisher.get()));
         }
 
         final WireMockServer server = new WireMockServer(configuration);
