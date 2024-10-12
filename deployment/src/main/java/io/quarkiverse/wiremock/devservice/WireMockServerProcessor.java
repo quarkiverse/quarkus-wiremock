@@ -25,6 +25,7 @@ import io.quarkus.deployment.IsDevelopment;
 import io.quarkus.deployment.annotations.BuildProducer;
 import io.quarkus.deployment.annotations.BuildStep;
 import io.quarkus.deployment.annotations.Consume;
+import io.quarkus.deployment.annotations.Produce;
 import io.quarkus.deployment.builditem.CuratedApplicationShutdownBuildItem;
 import io.quarkus.deployment.builditem.DevServicesResultBuildItem;
 import io.quarkus.deployment.builditem.DevServicesResultBuildItem.RunningDevService;
@@ -32,6 +33,7 @@ import io.quarkus.deployment.builditem.FeatureBuildItem;
 import io.quarkus.deployment.builditem.HotDeploymentWatchedFileBuildItem;
 import io.quarkus.deployment.builditem.LaunchModeBuildItem;
 import io.quarkus.deployment.builditem.LiveReloadBuildItem;
+import io.quarkus.deployment.builditem.RunTimeConfigurationDefaultBuildItem;
 import io.quarkus.deployment.dev.devservices.DevServiceDescriptionBuildItem;
 import io.quarkus.deployment.dev.devservices.GlobalDevServicesConfig;
 import io.quarkus.runtime.configuration.ConfigurationException;
@@ -52,7 +54,9 @@ class WireMockServerProcessor {
     }
 
     @BuildStep(onlyIf = { WireMockServerEnabled.class, GlobalDevServicesConfig.Enabled.class })
-    DevServicesResultBuildItem setup(LaunchModeBuildItem launchMode, LiveReloadBuildItem liveReload,
+    @Produce(WiremockStartedBuildItem.class)
+    void setup(
+            LaunchModeBuildItem launchMode, LiveReloadBuildItem liveReload,
             CuratedApplicationShutdownBuildItem shutdown, WireMockServerBuildTimeConfig config,
             BuildProducer<ValidationErrorBuildItem> configErrors) {
 
@@ -62,7 +66,7 @@ class WireMockServerProcessor {
             configErrors.produce(new ValidationErrorBuildItem(new ConfigurationException(
                     format("The specified port %d is not part of the permitted port range! Please specify a port between %d and %d.",
                             config.port().getAsInt(), MIN_PORT, MAX_PORT))));
-            return null;
+            return;
         }
 
         // register shutdown callback once
@@ -76,7 +80,15 @@ class WireMockServerProcessor {
         if (devService == null) {
             devService = startWireMockDevService(config);
         }
-        return devService.toBuildItem();
+    }
+
+    @BuildStep(onlyIf = { WireMockServerEnabled.class, GlobalDevServicesConfig.Enabled.class })
+    @Consume(WiremockStartedBuildItem.class)
+    void provideDevServiceResult(BuildProducer<DevServicesResultBuildItem> result) {
+        // need to be done in a separate step to avoid cycle
+        if (devService != null) {
+            result.produce(devService.toBuildItem());
+        }
     }
 
     @BuildStep(onlyIf = { WireMockServerEnabled.class, GlobalDevServicesConfig.Enabled.class })
@@ -95,6 +107,15 @@ class WireMockServerProcessor {
                         LOGGER.debugf("Watching [%s] for hot deployment!", file);
                         items.produce(new HotDeploymentWatchedFileBuildItem(file));
                     });
+        }
+    }
+
+    @BuildStep(onlyIf = { WireMockServerEnabled.class, GlobalDevServicesConfig.Enabled.class })
+    @Consume(WiremockStartedBuildItem.class)
+    void configureRestClient(BuildProducer<RunTimeConfigurationDefaultBuildItem> producer) {
+        if (devService != null) {
+            producer.produce(new RunTimeConfigurationDefaultBuildItem("quarkus.rest-client.proxy-address",
+                    "localhost:" + Integer.parseInt(devService.getConfig().get(PORT))));
         }
     }
 
