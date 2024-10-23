@@ -12,8 +12,8 @@ updates:
     ignore:
       - dependency-name: "org.apache.maven.plugins:maven-compiler-plugin"
       - dependency-name: "io.quarkus:quarkus-bom"
-        # Stay on Quarkus 3.8.x LTS stream
-        versions: [ ">= 3.9.0" ]
+        # Stay on Quarkus 3.15.x LTS stream
+        versions: [ ">= 3.16.0" ]
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
