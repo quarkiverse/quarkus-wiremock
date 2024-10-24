@@ -91,8 +91,8 @@ class WireMockServerProcessor {
             BuildProducer<HotDeploymentWatchedFileBuildItem> items) {
 
         if (!config.isClasspathFilesMapping()) {
-            listFiles(Paths.get(config.effectiveFileMapping(), MAPPINGS), Paths.get(config.effectiveFileMapping(), FILES))
-                    .forEach(file -> {
+            listFiles(Paths.get(config.effectiveFileMapping(), MAPPINGS),
+                    Paths.get(config.effectiveFileMapping(), FILES)).forEach(file -> {
                         LOGGER.debugf("Watching [%s] for hot deployment!", file);
                         items.produce(new HotDeploymentWatchedFileBuildItem(file));
                     });
@@ -101,16 +101,13 @@ class WireMockServerProcessor {
 
     private static RunningDevService startWireMockDevService(WireMockServerBuildTimeConfig config) {
 
-        final WireMockConfiguration configuration = options()
-                .globalTemplating(config.globalResponseTemplating())
-                .extensionScanningEnabled(config.extensionScanningEnabled())
-                .notifier(new JBossNotifier());
+        final WireMockConfiguration configuration = options().globalTemplating(config.globalResponseTemplating())
+                .extensionScanningEnabled(config.extensionScanningEnabled()).notifier(new JBossNotifier());
         config.port().ifPresentOrElse(configuration::port, configuration::dynamicPort);
 
         if (config.isClasspathFilesMapping()) {
-            configuration
-                    .fileSource(new ClasspathFileSource(Thread.currentThread().getContextClassLoader(),
-                            config.effectiveFileMapping()));
+            configuration.fileSource(new ClasspathFileSource(Thread.currentThread().getContextClassLoader(),
+                    config.effectiveFileMapping()));
         } else {
             configuration.usingFilesUnderDirectory(config.effectiveFileMapping());
         }
@@ -162,14 +159,17 @@ class WireMockServerProcessor {
         private static final Logger LOGGER = Logger
                 .getLogger(WireMockServerProcessor.class.getPackageName() + ".WireMockServer");
 
+        @Override
         public void info(String message) {
             LOGGER.info(message);
         }
 
+        @Override
         public void error(String message) {
             LOGGER.error(message);
         }
 
+        @Override
         public void error(String message, Throwable t) {
             LOGGER.error(message, t);
         }
