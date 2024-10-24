@@ -14,7 +14,7 @@ jobs:
       - uses: actions/stale@v9.0.0
         with:
           exempt-issue-labels: "pinned"
-          stale-issue-message: "@chberger This is being labeled as stale."
-          stale-pr-message: "@chberger This is being labeled as stale."
-          close-issue-message: "@chberger This is being closed due to inactivity."
-          close-pr-message: "@chberger This is being closed due to inactivity."
+          stale-issue-message: "@quarkiverse/quarkiverse-wiremock This is being labeled as stale."
+          stale-pr-message: "@quarkiverse/quarkiverse-wiremock This is being labeled as stale."
+          close-issue-message: "@quarkiverse/quarkiverse-wiremock This is being closed due to inactivity."
+          close-pr-message: "@quarkiverse/quarkiverse-wiremock This is being closed due to inactivity."
