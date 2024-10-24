@@ -11,7 +11,7 @@
 [![License](https://img.shields.io/github/license/quarkusio/quarkus?style=for-the-badge&logo=apache)](https://www.apache.org/licenses/LICENSE-2.0)
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-6-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ## Description
@@ -66,6 +66,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://linktr.ee/onenashev"><img src="https://avatars.githubusercontent.com/u/3000480?v=4?s=100" width="100px;" alt="Oleg Nenashev"/><br /><sub><b>Oleg Nenashev</b></sub></a><br /><a href="https://github.com/quarkiverse/quarkus-wiremock/pulls?q=is%3Apr+reviewed-by%3Aoleg-nenashev" title="Reviewed Pull Requests">👀</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://developers.redhat.com/author/eric-deandrea"><img src="https://avatars.githubusercontent.com/u/363447?v=4?s=100" width="100px;" alt="Eric Deandrea"/><br /><sub><b>Eric Deandrea</b></sub></a><br /><a href="https://github.com/quarkiverse/quarkus-wiremock/issues?q=author%3Aedeandrea" title="Bug reports">🐛</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/geoand"><img src="https://avatars.githubusercontent.com/u/4374975?v=4?s=100" width="100px;" alt="Georgios Andrianakis"/><br /><sub><b>Georgios Andrianakis</b></sub></a><br /><a href="https://github.com/quarkiverse/quarkus-wiremock/commits?author=geoand" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/derari"><img src="https://avatars.githubusercontent.com/u/82387?v=4?s=100" width="100px;" alt="derari"/><br /><sub><b>derari</b></sub></a><br /><a href="https://github.com/quarkiverse/quarkus-wiremock/commits?author=derari" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
