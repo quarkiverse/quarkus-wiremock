@@ -23,9 +23,9 @@ Quarkus [WireMock](https://wiremock.org) extension for tests and local developme
 Currently, this Quarkus extension supports the `LTS` streams of Quarkus only. 
 However, it's most likely that this extension will work with the latest and greatest version of `Quarkus` as well.
 
-| Quarkus WireMock | WireMock | Quarkus Platform  | Documentation                                                                                                       |
-|------------------|----------|-------------------|---------------------------------------------------------------------------------------------------------------------|
-| 1.x.x            | 3.x      | 3.8.x (LTS) | [Quarkiverse Docs](https://quarkiverse.github.io/quarkiverse-docs/quarkus-wiremock/dev/index.html) |
+| Quarkus WireMock | WireMock | Quarkus Platform | Documentation                                                                                                       |
+|------------------|----------|------------------|---------------------------------------------------------------------------------------------------------------------|
+| 1.x.x            | 3.x      | 3.15.x (LTS)     | [Quarkiverse Docs](https://quarkiverse.github.io/quarkiverse-docs/quarkus-wiremock/dev/index.html) |
 
 ## 🚀 Quarkus WireMock Extension in Action
 
