@@ -136,6 +136,15 @@ custom.config.wiremock.url=http://localhost:${quarkus.wiremock.devservices.port}
 
 TIP: Please refer to https://quarkus.io/guides/config-reference#property-expressions[Property Expressions] for further details.
 
+== Logging
+
+The verbosity of the WireMock log output can be controlled through:
+[source,properties]
+----
+quarkus.log.category."io.quarkiverse.wiremock.devservice.WireMockServer".level=ERROR
+----
+
+
 [[extension-configuration-reference]]
 == Extension Configuration Reference
 
