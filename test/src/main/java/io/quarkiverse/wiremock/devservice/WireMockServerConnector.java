@@ -5,17 +5,15 @@ import static io.quarkiverse.wiremock.devservice.WireMockConfigKey.PORT;
 import java.util.Collections;
 import java.util.Map;
 
-import org.jboss.logging.Logger;
-
 import com.github.tomakehurst.wiremock.client.WireMock;
 
+import io.quarkus.logging.Log;
 import io.quarkus.test.common.DevServicesContext;
 import io.quarkus.test.common.QuarkusTestResourceConfigurableLifecycleManager;
 
 public class WireMockServerConnector
         implements QuarkusTestResourceConfigurableLifecycleManager<ConnectWireMock>, DevServicesContext.ContextAware {
 
-    private static final Logger LOGGER = Logger.getLogger(WireMockServerConnector.class);
     WireMock wiremock;
 
     @Override
@@ -43,9 +41,8 @@ public class WireMockServerConnector
             wiremock = new WireMock(port);
             wiremock.getGlobalSettings(); // establish a connection to WireMock server eagerly
         } catch (Exception ex) {
-            LOGGER.error("Cannot connect to WireMock server!", ex);
+            Log.error("Cannot connect to WireMock server!", ex);
             throw ex;
         }
     }
-
 }
