@@ -26,19 +26,15 @@ import io.quarkus.deployment.IsDevelopment;
 import io.quarkus.deployment.annotations.BuildProducer;
 import io.quarkus.deployment.annotations.BuildStep;
 import io.quarkus.deployment.annotations.Consume;
-import io.quarkus.deployment.builditem.CuratedApplicationShutdownBuildItem;
-import io.quarkus.deployment.builditem.DevServicesResultBuildItem;
+import io.quarkus.deployment.builditem.*;
 import io.quarkus.deployment.builditem.DevServicesResultBuildItem.RunningDevService;
-import io.quarkus.deployment.builditem.FeatureBuildItem;
-import io.quarkus.deployment.builditem.HotDeploymentWatchedFileBuildItem;
-import io.quarkus.deployment.builditem.LaunchModeBuildItem;
-import io.quarkus.deployment.builditem.LiveReloadBuildItem;
 import io.quarkus.deployment.dev.devservices.DevServiceDescriptionBuildItem;
 import io.quarkus.deployment.dev.devservices.GlobalDevServicesConfig;
+import io.quarkus.logging.Log;
 import io.quarkus.runtime.configuration.ConfigurationException;
 
 class WireMockServerProcessor {
-    private static final Logger LOGGER = Logger.getLogger(WireMockServerProcessor.class);
+
     private static final String FEATURE_NAME = "wiremock";
     private static final String DEV_SERVICE_NAME = "WireMock";
     private static final String MAPPINGS = "mappings";
@@ -57,7 +53,7 @@ class WireMockServerProcessor {
             CuratedApplicationShutdownBuildItem shutdown, WireMockServerBuildTimeConfig config,
             BuildProducer<ValidationErrorBuildItem> configErrors) {
 
-        LOGGER.debugf("Quarkus launch mode [%s]", launchMode.getLaunchMode());
+        Log.debugf("Quarkus launch mode [%s]", launchMode.getLaunchMode());
 
         if (isPortConfigInvalid(config)) {
             configErrors.produce(new ValidationErrorBuildItem(new ConfigurationException(
@@ -70,7 +66,7 @@ class WireMockServerProcessor {
         shutdown.addCloseTask(WireMockServerProcessor::stopWireMockDevService, true);
 
         if (liveReload.isLiveReload() && config.reload()) {
-            LOGGER.debug("Live reload triggered!");
+            Log.debug("Live reload triggered!");
             stopWireMockDevService();
         }
 
@@ -93,7 +89,7 @@ class WireMockServerProcessor {
         if (!config.isClasspathFilesMapping()) {
             listFiles(Paths.get(config.effectiveFileMapping(), MAPPINGS),
                     Paths.get(config.effectiveFileMapping(), FILES)).forEach(file -> {
-                        LOGGER.debugf("Watching [%s] for hot deployment!", file);
+                        Log.debugf("Watching [%s] for hot deployment!", file);
                         items.produce(new HotDeploymentWatchedFileBuildItem(file));
                     });
         }
@@ -114,7 +110,7 @@ class WireMockServerProcessor {
 
         final WireMockServer server = new WireMockServer(configuration);
         server.start();
-        LOGGER.debugf("WireMock server listening on port [%s]", server.port());
+        Log.debugf("WireMock server listening on port [%s]", server.port());
 
         return new RunningDevService(DEV_SERVICE_NAME, null, server::shutdown, PORT, String.valueOf(server.port()));
     }
@@ -122,11 +118,11 @@ class WireMockServerProcessor {
     private static synchronized void stopWireMockDevService() {
         try {
             if (devService != null) {
-                LOGGER.debugf("Stopping WireMock server running on port %s", devService.getConfig().get(PORT));
+                Log.debugf("Stopping WireMock server running on port %s", devService.getConfig().get(PORT));
                 devService.close();
             }
         } catch (IOException e) {
-            LOGGER.error("Failed to stop WireMock server", e);
+            Log.error("Failed to stop WireMock server", e);
             throw new UncheckedIOException(e);
         } finally {
             devService = null;
