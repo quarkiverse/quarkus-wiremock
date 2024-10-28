@@ -1,0 +1,16 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/mock-rest-client"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "name": "John Doe",
+      "email": "john.doe@quarkus.io"
+    }
+  }
+}

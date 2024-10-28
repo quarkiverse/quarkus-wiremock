@@ -56,6 +56,12 @@ public interface WireMockServerBuildTimeConfig {
     @WithDefault("false")
     boolean extensionScanningEnabled();
 
+    /**
+     * Control whether rest client is automatically proxied via wiremock in dev and test mode.
+     */
+    @WithDefault("true")
+    boolean proxyRestClient();
+
     default boolean isClasspathFilesMapping() {
         return filesMapping().startsWith("classpath:");
     }

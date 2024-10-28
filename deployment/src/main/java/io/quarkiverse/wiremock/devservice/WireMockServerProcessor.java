@@ -4,6 +4,7 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options
 import static io.quarkiverse.wiremock.devservice.WireMockConfigKey.PORT;
 import static java.lang.String.format;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
@@ -26,11 +27,19 @@ import io.quarkus.deployment.IsDevelopment;
 import io.quarkus.deployment.annotations.BuildProducer;
 import io.quarkus.deployment.annotations.BuildStep;
 import io.quarkus.deployment.annotations.Consume;
-import io.quarkus.deployment.builditem.*;
+import io.quarkus.deployment.annotations.Produce;
+import io.quarkus.deployment.builditem.CuratedApplicationShutdownBuildItem;
+import io.quarkus.deployment.builditem.DevServicesResultBuildItem;
 import io.quarkus.deployment.builditem.DevServicesResultBuildItem.RunningDevService;
+import io.quarkus.deployment.builditem.FeatureBuildItem;
+import io.quarkus.deployment.builditem.HotDeploymentWatchedFileBuildItem;
+import io.quarkus.deployment.builditem.LaunchModeBuildItem;
+import io.quarkus.deployment.builditem.LiveReloadBuildItem;
 import io.quarkus.deployment.dev.devservices.DevServiceDescriptionBuildItem;
 import io.quarkus.deployment.dev.devservices.GlobalDevServicesConfig;
 import io.quarkus.logging.Log;
+import io.quarkus.rest.client.reactive.spi.DevServicesRestClientProxyProvider;
+import io.quarkus.rest.client.reactive.spi.RestClientHttpProxyBuildItem;
 import io.quarkus.runtime.configuration.ConfigurationException;
 
 class WireMockServerProcessor {
@@ -49,7 +58,9 @@ class WireMockServerProcessor {
     }
 
     @BuildStep(onlyIf = { WireMockServerEnabled.class, GlobalDevServicesConfig.Enabled.class })
-    DevServicesResultBuildItem setup(LaunchModeBuildItem launchMode, LiveReloadBuildItem liveReload,
+    @Produce(WiremockStartedBuildItem.class)
+    void setup(
+            LaunchModeBuildItem launchMode, LiveReloadBuildItem liveReload,
             CuratedApplicationShutdownBuildItem shutdown, WireMockServerBuildTimeConfig config,
             BuildProducer<ValidationErrorBuildItem> configErrors) {
 
@@ -59,7 +70,7 @@ class WireMockServerProcessor {
             configErrors.produce(new ValidationErrorBuildItem(new ConfigurationException(
                     format("The specified port %d is not part of the permitted port range! Please specify a port between %d and %d.",
                             config.port().getAsInt(), MIN_PORT, MAX_PORT))));
-            return null;
+            return;
         }
 
         // register shutdown callback once
@@ -73,7 +84,15 @@ class WireMockServerProcessor {
         if (devService == null) {
             devService = startWireMockDevService(config);
         }
-        return devService.toBuildItem();
+    }
+
+    @BuildStep(onlyIf = { WireMockServerEnabled.class, GlobalDevServicesConfig.Enabled.class })
+    @Consume(WiremockStartedBuildItem.class)
+    void provideDevServiceResult(BuildProducer<DevServicesResultBuildItem> result) {
+        // need to be done in a separate step to avoid cycle
+        if (devService != null) {
+            result.produce(devService.toBuildItem());
+        }
     }
 
     @BuildStep(onlyIf = { WireMockServerEnabled.class, GlobalDevServicesConfig.Enabled.class })
@@ -93,6 +112,28 @@ class WireMockServerProcessor {
                         items.produce(new HotDeploymentWatchedFileBuildItem(file));
                     });
         }
+    }
+
+    @BuildStep(onlyIf = { WireMockServerEnabled.class, GlobalDevServicesConfig.Enabled.class,
+            WireMockProxyRestClientEnabled.class })
+    @Consume(WiremockStartedBuildItem.class)
+    DevServicesRestClientProxyProvider.BuildItem provideRestClientProxyProvider() {
+        return new DevServicesRestClientProxyProvider.BuildItem(new DevServicesRestClientProxyProvider() {
+            @Override
+            public String name() {
+                return "wiremock";
+            }
+
+            @Override
+            public Closeable setup() {
+                return null;
+            }
+
+            @Override
+            public CreateResult create(RestClientHttpProxyBuildItem buildItem) {
+                return new CreateResult("localhost", Integer.parseInt(devService.getConfig().get(PORT)), null);
+            }
+        });
     }
 
     private static RunningDevService startWireMockDevService(WireMockServerBuildTimeConfig config) {

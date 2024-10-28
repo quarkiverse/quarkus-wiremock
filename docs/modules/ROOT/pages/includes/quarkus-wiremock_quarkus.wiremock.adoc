@@ -114,6 +114,23 @@ endif::add-copy-button-to-env-var[]
 |boolean
 |`false`
 
+a|icon:lock[title=Fixed at build time] [[quarkus-wiremock_quarkus-wiremock-devservices-proxy-rest-client]] [.property-path]##link:#quarkus-wiremock_quarkus-wiremock-devservices-proxy-rest-client[`quarkus.wiremock.devservices.proxy-rest-client`]##
+
+[.description]
+--
+Control whether rest client is automatically proxied via wiremock in dev and test mode.
+
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_WIREMOCK_DEVSERVICES_PROXY_REST_CLIENT+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++QUARKUS_WIREMOCK_DEVSERVICES_PROXY_REST_CLIENT+++`
+endif::add-copy-button-to-env-var[]
+--
+|boolean
+|`true`
+
 |===
 
 
