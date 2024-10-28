@@ -30,6 +30,8 @@ import io.quarkus.deployment.builditem.*;
 import io.quarkus.deployment.builditem.DevServicesResultBuildItem.RunningDevService;
 import io.quarkus.deployment.dev.devservices.DevServiceDescriptionBuildItem;
 import io.quarkus.deployment.dev.devservices.GlobalDevServicesConfig;
+import io.quarkus.devui.spi.page.CardPageBuildItem;
+import io.quarkus.devui.spi.page.Page;
 import io.quarkus.logging.Log;
 import io.quarkus.runtime.configuration.ConfigurationException;
 
@@ -93,6 +95,22 @@ class WireMockServerProcessor {
                         items.produce(new HotDeploymentWatchedFileBuildItem(file));
                     });
         }
+    }
+
+    @BuildStep(onlyIf = { WireMockServerEnabled.class, GlobalDevServicesConfig.Enabled.class, IsDevelopment.class })
+    @Consume(DevServicesResultBuildItem.class)
+    public CardPageBuildItem pages() {
+
+        CardPageBuildItem cardPageBuildItem = new CardPageBuildItem();
+        String wiremockUrl = "http://localhost:" + devService.getConfig().get(PORT);
+        String mappingsUrl = wiremockUrl + "/__admin/mappings";
+
+        cardPageBuildItem.addPage(Page.externalPageBuilder("Mappings")
+                .url(mappingsUrl, mappingsUrl)
+                .doNotEmbed()
+                .icon("font-awesome-solid:file-code"));
+
+        return cardPageBuildItem;
     }
 
     private static RunningDevService startWireMockDevService(WireMockServerBuildTimeConfig config) {
