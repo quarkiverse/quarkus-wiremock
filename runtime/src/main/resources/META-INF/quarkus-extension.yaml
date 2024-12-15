@@ -8,8 +8,13 @@ metadata:
     - wiremock
     - wiremock-server
     - test
+    - testing
     - mock
+    - mocking
+    - stubbing
+    - http
   categories:
     - "miscellaneous"
+    - "testing"
   status: "preview"
   icon-url: "https://raw.githubusercontent.com/quarkiverse/quarkus-wiremock/refs/heads/main/docs/modules/ROOT/assets/images/wiremock.svg"
