@@ -25,7 +25,7 @@ However, it's most likely that this extension will work with the latest and grea
 
 | Quarkus WireMock | WireMock | Quarkus Platform | Documentation                                                                                                       |
 |------------------|----------|------------------|---------------------------------------------------------------------------------------------------------------------|
-| 1.x.x            | 3.x      | 3.15.x (LTS)     | [Quarkiverse Docs](https://quarkiverse.github.io/quarkiverse-docs/quarkus-wiremock/dev/index.html) |
+| 1.x.x            | 3.x      | 3.20.x (LTS)     | [Quarkiverse Docs](https://quarkiverse.github.io/quarkiverse-docs/quarkus-wiremock/dev/index.html) |
 
 ## 🚀 Quarkus WireMock Extension in Action
 
