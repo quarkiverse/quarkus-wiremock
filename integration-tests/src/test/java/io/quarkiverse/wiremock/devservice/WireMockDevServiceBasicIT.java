@@ -1,7 +1,10 @@
 package io.quarkiverse.wiremock.devservice;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.anyRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.anyUrl;
 import static io.quarkiverse.wiremock.devservice.WireMockConfigKey.FILES_MAPPING;
 import static io.quarkiverse.wiremock.devservice.WireMockConfigKey.PORT;
+import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -60,6 +63,13 @@ class WireMockDevServiceBasicIT {
     void testNonPropagatedConfigsArentAccessibleInIT() {
         assertThrows(NoSuchElementException.class,
                 () -> ConfigProvider.getConfig().getValue(FILES_MAPPING, String.class));
+    }
+
+    @Test
+    void testPortMappingWithVerify() {
+        var port = Integer.parseInt(devServicesContext.devServicesProperties().get(PORT));
+        given().when().get(String.format("http://localhost:%d/", port));
+        WireMock.verify(1, anyRequestedFor(anyUrl()));
     }
 
     private static boolean isInUse(int port) {

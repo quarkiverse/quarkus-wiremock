@@ -39,6 +39,7 @@ public class WireMockServerConnector
         try {
             int port = Integer.parseInt(devContext.get(PORT));
             wiremock = new WireMock(port);
+            WireMock.configureFor(port);
             wiremock.getGlobalSettings(); // establish a connection to WireMock server eagerly
         } catch (Exception ex) {
             Log.error("Cannot connect to WireMock server!", ex);
