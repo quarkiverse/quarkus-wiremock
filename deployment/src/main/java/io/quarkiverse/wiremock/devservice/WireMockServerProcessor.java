@@ -29,7 +29,7 @@ import io.quarkus.deployment.annotations.Consume;
 import io.quarkus.deployment.builditem.*;
 import io.quarkus.deployment.builditem.DevServicesResultBuildItem.RunningDevService;
 import io.quarkus.deployment.dev.devservices.DevServiceDescriptionBuildItem;
-import io.quarkus.deployment.dev.devservices.GlobalDevServicesConfig;
+import io.quarkus.deployment.dev.devservices.DevServicesConfig;
 import io.quarkus.devui.spi.page.CardPageBuildItem;
 import io.quarkus.devui.spi.page.Page;
 import io.quarkus.logging.Log;
@@ -50,7 +50,7 @@ class WireMockServerProcessor {
         return new FeatureBuildItem(FEATURE_NAME);
     }
 
-    @BuildStep(onlyIf = { WireMockServerEnabled.class, GlobalDevServicesConfig.Enabled.class })
+    @BuildStep(onlyIf = { WireMockServerEnabled.class, DevServicesConfig.Enabled.class })
     DevServicesResultBuildItem setup(LaunchModeBuildItem launchMode, LiveReloadBuildItem liveReload,
             CuratedApplicationShutdownBuildItem shutdown, WireMockServerBuildTimeConfig config,
             BuildProducer<ValidationErrorBuildItem> configErrors) {
@@ -78,13 +78,13 @@ class WireMockServerProcessor {
         return devService.toBuildItem();
     }
 
-    @BuildStep(onlyIf = { WireMockServerEnabled.class, GlobalDevServicesConfig.Enabled.class })
+    @BuildStep(onlyIf = { WireMockServerEnabled.class, DevServicesConfig.Enabled.class })
     @Consume(DevServicesResultBuildItem.class)
     DevServiceDescriptionBuildItem renderDevServiceDevUICard() {
         return new DevServiceDescriptionBuildItem(DEV_SERVICE_NAME, null, devService.getConfig());
     }
 
-    @BuildStep(onlyIf = { WireMockServerEnabled.class, GlobalDevServicesConfig.Enabled.class, IsDevelopment.class })
+    @BuildStep(onlyIf = { WireMockServerEnabled.class, DevServicesConfig.Enabled.class, IsDevelopment.class })
     void watchWireMockConfigFiles(WireMockServerBuildTimeConfig config,
             BuildProducer<HotDeploymentWatchedFileBuildItem> items) {
 
@@ -97,7 +97,7 @@ class WireMockServerProcessor {
         }
     }
 
-    @BuildStep(onlyIf = { WireMockServerEnabled.class, GlobalDevServicesConfig.Enabled.class, IsDevelopment.class })
+    @BuildStep(onlyIf = { WireMockServerEnabled.class, DevServicesConfig.Enabled.class, IsDevelopment.class })
     @Consume(DevServicesResultBuildItem.class)
     public CardPageBuildItem pages() {
 
