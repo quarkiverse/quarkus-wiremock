@@ -81,7 +81,7 @@ class WireMockServerProcessor {
     @BuildStep(onlyIf = { WireMockServerEnabled.class, DevServicesConfig.Enabled.class })
     @Consume(DevServicesResultBuildItem.class)
     DevServiceDescriptionBuildItem renderDevServiceDevUICard() {
-        return new DevServiceDescriptionBuildItem(DEV_SERVICE_NAME, null, devService.getConfig());
+        return new DevServiceDescriptionBuildItem(DEV_SERVICE_NAME, null, null, devService.getConfig());
     }
 
     @BuildStep(onlyIf = { WireMockServerEnabled.class, DevServicesConfig.Enabled.class, IsDevelopment.class })
