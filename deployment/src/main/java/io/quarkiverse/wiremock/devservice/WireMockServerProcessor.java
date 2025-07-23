@@ -28,6 +28,7 @@ import io.quarkus.deployment.annotations.BuildStep;
 import io.quarkus.deployment.annotations.Consume;
 import io.quarkus.deployment.builditem.*;
 import io.quarkus.deployment.builditem.DevServicesResultBuildItem.RunningDevService;
+import io.quarkus.deployment.dev.devservices.ContainerInfo;
 import io.quarkus.deployment.dev.devservices.DevServiceDescriptionBuildItem;
 import io.quarkus.deployment.dev.devservices.DevServicesConfig;
 import io.quarkus.devui.spi.page.CardPageBuildItem;
@@ -81,7 +82,7 @@ class WireMockServerProcessor {
     @BuildStep(onlyIf = { WireMockServerEnabled.class, DevServicesConfig.Enabled.class })
     @Consume(DevServicesResultBuildItem.class)
     DevServiceDescriptionBuildItem renderDevServiceDevUICard() {
-        return new DevServiceDescriptionBuildItem(DEV_SERVICE_NAME, null, null, devService.getConfig());
+        return new DevServiceDescriptionBuildItem(DEV_SERVICE_NAME, null, (ContainerInfo) null, devService.getConfig());
     }
 
     @BuildStep(onlyIf = { WireMockServerEnabled.class, DevServicesConfig.Enabled.class, IsDevelopment.class })
