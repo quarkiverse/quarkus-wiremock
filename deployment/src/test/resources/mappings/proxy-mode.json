@@ -1,0 +1,30 @@
+{
+  "mappings": [
+    {
+      "request": {
+        "host": {
+          "equalTo": "my.first.domain"
+        },
+        "method": "GET",
+        "url": "/proxy-mode"
+      },
+      "response": {
+        "status": 200,
+        "body": "Domain 1"
+      }
+    },
+    {
+      "request": {
+        "host": {
+          "equalTo": "my.second.domain"
+        },
+        "method": "GET",
+        "url": "/proxy-mode"
+      },
+      "response": {
+        "status": 200,
+        "body": "Domain 2"
+      }
+    }
+  ]
+}

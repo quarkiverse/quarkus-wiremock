@@ -56,6 +56,14 @@ public interface WireMockServerBuildTimeConfig {
     @WithDefault("false")
     boolean extensionScanningEnabled();
 
+    /**
+     * Enable proxy mode to support multi-domain mocking.
+     * <p>
+     * Please refer to <a href="https://wiremock.org/3.x/docs/multi-domain-mocking/">Multi-domain Mocking</a> for more details.
+     */
+    @WithDefault("false")
+    boolean proxyMode();
+
     default boolean isClasspathFilesMapping() {
         return filesMapping().startsWith("classpath:");
     }

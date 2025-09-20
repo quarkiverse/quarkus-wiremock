@@ -10,6 +10,7 @@ public class WireMockConfigKey {
     public static final String RELOAD = PREFIX + ".reload";
     public static final String FILES_MAPPING = PREFIX + ".files-mapping";
     public static final String GLOBAL_RESPONSE_TEMPLATING = PREFIX + ".global-response-templating";
+    public static final String PROXY_MODE = PREFIX + ".proxy-mode";
 
     private WireMockConfigKey() {
         // do not instantiate
