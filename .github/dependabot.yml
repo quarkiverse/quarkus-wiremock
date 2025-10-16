@@ -11,11 +11,11 @@ updates:
       interval: "daily"
     ignore:
       - dependency-name: "org.apache.maven.plugins:maven-compiler-plugin"
-        # Stay on Quarkus 3.20.x LTS stream
+        # Stay on Quarkus 3.27.x LTS stream
       - dependency-name: "io.quarkus:quarkus-bom"
-        versions: [ ">= 3.21.0" ]
+        versions: [ ">= 3.28.0" ]
       - dependency-name: "io.quarkus:*"
-        versions: [ ">= 3.21.0" ]
+        versions: [ ">= 3.28.0" ]
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
