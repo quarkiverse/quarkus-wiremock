@@ -6,7 +6,7 @@
 <br>
 
 [![GitHub Actions Status](https://img.shields.io/github/actions/workflow/status/quarkiverse/quarkus-wiremock/build.yml?branch=main&logo=GitHub&style=for-the-badge)](https://github.com/quarkiverse/quarkus-wiremock/actions/workflows/build.yml)
-[![Supported JVM Versions](https://img.shields.io/badge/JVM-17--21-brightgreen.svg?style=for-the-badge&logo=openjdk)](https://github.com/quarkiverse/quarkus-wiremock/actions/workflows/build.yml)
+[![Supported JVM Versions](https://img.shields.io/badge/JVM-17--25-brightgreen.svg?style=for-the-badge&logo=openjdk)](https://github.com/quarkiverse/quarkus-wiremock/actions/workflows/build.yml)
 [![Version](https://img.shields.io/maven-central/v/io.quarkiverse.wiremock/quarkus-wiremock-parent?logo=apache-maven&style=for-the-badge)](https://search.maven.org/search?q=g:io.quarkiverse.wiremock%20AND%20a:quarkus-wiremock-parent)
 [![License](https://img.shields.io/github/license/quarkusio/quarkus?style=for-the-badge&logo=apache)](https://www.apache.org/licenses/LICENSE-2.0)
 
