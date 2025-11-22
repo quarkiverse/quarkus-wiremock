@@ -2,6 +2,7 @@ package io.quarkiverse.wiremock.devservice;
 
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static io.quarkiverse.wiremock.devservice.WireMockConfigKey.PORT;
+import static io.quarkiverse.wiremock.devservice.WireMockConfigKey.PROXY_MODE;
 import static java.lang.String.format;
 
 import java.io.IOException;
@@ -10,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -20,6 +22,7 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.common.ClasspathFileSource;
 import com.github.tomakehurst.wiremock.common.Notifier;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import com.github.tomakehurst.wiremock.http.JvmProxyConfigurer;
 
 import io.quarkus.arc.deployment.ValidationPhaseBuildItem.ValidationErrorBuildItem;
 import io.quarkus.deployment.IsDevelopment;
@@ -116,8 +119,11 @@ class WireMockServerProcessor {
 
     private static RunningDevService startWireMockDevService(WireMockServerBuildTimeConfig config) {
 
-        final WireMockConfiguration configuration = options().globalTemplating(config.globalResponseTemplating())
-                .extensionScanningEnabled(config.extensionScanningEnabled()).notifier(new JBossNotifier());
+        final WireMockConfiguration configuration = options()
+                .globalTemplating(config.globalResponseTemplating())
+                .extensionScanningEnabled(config.extensionScanningEnabled())
+                .enableBrowserProxying(config.proxyMode())
+                .notifier(new JBossNotifier());
         config.port().ifPresentOrElse(configuration::port, configuration::dynamicPort);
 
         if (config.isClasspathFilesMapping()) {
@@ -131,7 +137,12 @@ class WireMockServerProcessor {
         server.start();
         Log.debugf("WireMock server listening on port [%s]", server.port());
 
-        return new RunningDevService(DEV_SERVICE_NAME, null, server::shutdown, PORT, String.valueOf(server.port()));
+        if (config.proxyMode()) {
+            JvmProxyConfigurer.configureFor(server);
+        }
+
+        return new RunningDevService(DEV_SERVICE_NAME, null, server::shutdown,
+                Map.of(PORT, String.valueOf(server.port()), PROXY_MODE, String.valueOf(config.proxyMode())));
     }
 
     private static synchronized void stopWireMockDevService() {
@@ -144,6 +155,9 @@ class WireMockServerProcessor {
             Log.error("Failed to stop WireMock server", e);
             throw new UncheckedIOException(e);
         } finally {
+            if (Boolean.getBoolean(devService.getConfig().get(PROXY_MODE))) {
+                JvmProxyConfigurer.restorePrevious();
+            }
             devService = null;
         }
     }
