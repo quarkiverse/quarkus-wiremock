@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 
 import io.quarkus.test.common.QuarkusTestResource;
 
-@QuarkusTestResource(value = WireMockServerConnector.class)
+@QuarkusTestResource(value = WireMockServerConnector.class, restrictToAnnotatedClass = false)
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Documented
