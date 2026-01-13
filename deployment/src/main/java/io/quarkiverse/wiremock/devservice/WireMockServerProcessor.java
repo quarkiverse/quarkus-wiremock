@@ -111,6 +111,8 @@ class WireMockServerProcessor {
                 .doNotEmbed()
                 .icon("font-awesome-solid:file-code"));
 
+        cardPageBuildItem.addLibraryVersion("org.wiremock", "wiremock-standalone", "WireMock", "https://wiremock.org/");
+
         return cardPageBuildItem;
     }
 
