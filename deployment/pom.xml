@@ -14,6 +14,10 @@
             <artifactId>quarkus-arc-deployment</artifactId>
         </dependency>
         <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-devservices-deployment</artifactId>
+        </dependency>
+        <dependency>
             <groupId>io.quarkiverse.wiremock</groupId>
             <artifactId>quarkus-wiremock</artifactId>
             <version>${project.version}</version>
