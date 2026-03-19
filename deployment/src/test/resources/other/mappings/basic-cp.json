@@ -1,0 +1,10 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/basic-cp"
+  },
+  "response": {
+    "status": 200,
+    "body": "Hello from classpath!"
+  }
+}

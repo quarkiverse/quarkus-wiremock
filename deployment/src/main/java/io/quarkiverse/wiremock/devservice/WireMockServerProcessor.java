@@ -19,7 +19,9 @@ import org.jboss.logging.Logger;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.common.ClasspathFileSource;
+import com.github.tomakehurst.wiremock.common.FileSource;
 import com.github.tomakehurst.wiremock.common.Notifier;
+import com.github.tomakehurst.wiremock.common.SingleRootFileSource;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 
 import io.quarkus.arc.deployment.ValidationPhaseBuildItem.ValidationErrorBuildItem;
@@ -65,11 +67,15 @@ class WireMockServerProcessor {
             return null;
         }
 
+        // resolveFileSource must be called here in the build step thread, where the context classloader
+        // has the application archive on its classpath. Calling it inside the lambda would run it in a
+        // ForkJoinPool worker thread whose classloader cannot see classpath resources.
+        final FileSource fileSource = resolveFileSource(config);
         return DevServicesResultBuildItem.owned()
                 .feature(FEATURE_NAME)
                 .serviceName(DEV_SERVICE_NAME)
                 .serviceConfig(config)
-                .startable(() -> new WireMockStartable(config))
+                .startable(() -> new WireMockStartable(config, fileSource))
                 .configProvider(Map.of(PORT, s -> valueOf(s.getExposedPort())))
                 .build();
     }
@@ -109,9 +115,11 @@ class WireMockServerProcessor {
         private WireMockServer server;
 
         private final WireMockServerBuildTimeConfig config;
+        private final FileSource fileSource;
 
-        public WireMockStartable(WireMockServerBuildTimeConfig config) {
+        public WireMockStartable(WireMockServerBuildTimeConfig config, FileSource fileSource) {
             this.config = config;
+            this.fileSource = fileSource;
         }
 
         @Override
@@ -119,15 +127,9 @@ class WireMockServerProcessor {
             final WireMockConfiguration configuration = WireMockConfiguration.options()
                     .globalTemplating(config.globalResponseTemplating())
                     .extensionScanningEnabled(config.extensionScanningEnabled())
-                    .notifier(new JBossNotifier());
+                    .notifier(new JBossNotifier())
+                    .fileSource(fileSource);
             config.port().ifPresentOrElse(configuration::port, configuration::dynamicPort);
-
-            if (config.isClasspathFilesMapping()) {
-                configuration.fileSource(new ClasspathFileSource(Thread.currentThread().getContextClassLoader(),
-                        config.effectiveFileMapping()));
-            } else {
-                configuration.usingFilesUnderDirectory(config.effectiveFileMapping());
-            }
 
             server = new WireMockServer(configuration);
 
@@ -156,6 +158,14 @@ class WireMockServerProcessor {
                 server.stop();
             }
         }
+    }
+
+    private static FileSource resolveFileSource(WireMockServerBuildTimeConfig config) {
+        if (config.isClasspathFilesMapping()) {
+            return new ClasspathFileSource(Thread.currentThread().getContextClassLoader(),
+                    config.effectiveFileMapping());
+        }
+        return new SingleRootFileSource(config.effectiveFileMapping());
     }
 
     private static boolean isPortConfigInvalid(WireMockServerBuildTimeConfig config) {
