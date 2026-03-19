@@ -41,6 +41,7 @@ import io.quarkus.devui.spi.page.CardPageBuildItem;
 import io.quarkus.devui.spi.page.Page;
 import io.quarkus.logging.Log;
 import io.quarkus.runtime.configuration.ConfigurationException;
+import io.quarkus.runtime.util.HashUtil;
 
 class WireMockServerProcessor {
 
@@ -74,7 +75,7 @@ class WireMockServerProcessor {
         return DevServicesResultBuildItem.owned()
                 .feature(FEATURE_NAME)
                 .serviceName(DEV_SERVICE_NAME)
-                .serviceConfig(config)
+                .serviceConfig(serviceKey(config))
                 .startable(() -> new WireMockStartable(config, fileSource))
                 .configProvider(Map.of(PORT, s -> valueOf(s.getExposedPort())))
                 .build();
@@ -188,6 +189,40 @@ class WireMockServerProcessor {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
+    }
+
+    /**
+     * Builds a deterministic service key from the config values plus a SHA-256 hash of all mapping file contents.
+     * The dev services framework uses this to decide whether to restart WireMock: if the key is identical to the
+     * previous build, the running instance is reused; if it differs (config changed or any file was modified), the
+     * instance is stopped and a fresh one is started.
+     * <p>
+     * For classpath mode, file changes always trigger a full rebuild (not a hot reload), so the service is restarted
+     * regardless. Including a file hash for classpath resources is therefore unnecessary.
+     */
+    private static String serviceKey(WireMockServerBuildTimeConfig config) {
+        return config.reload() + "|" + config.port() + "|" + config.filesMapping() + "|"
+                + config.globalResponseTemplating() + "|" + config.extensionScanningEnabled() + "|"
+                + (config.reload() ? filesHash(config) : "");
+    }
+
+    private static String filesHash(WireMockServerBuildTimeConfig config) {
+        if (config.isClasspathFilesMapping()) {
+            return "";
+        }
+        String combined = listFiles(
+                Paths.get(config.effectiveFileMapping(), MAPPINGS),
+                Paths.get(config.effectiveFileMapping(), FILES))
+                .stream().sorted()
+                .map(file -> {
+                    try {
+                        return file + ":" + HashUtil.sha256(Files.readAllBytes(Path.of(file)));
+                    } catch (IOException e) {
+                        throw new UncheckedIOException(e);
+                    }
+                })
+                .collect(Collectors.joining("|"));
+        return HashUtil.sha256(combined);
     }
 
     private static class JBossNotifier implements Notifier {
