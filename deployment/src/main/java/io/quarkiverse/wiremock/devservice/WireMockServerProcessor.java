@@ -66,7 +66,7 @@ class WireMockServerProcessor {
         }
 
         return DevServicesResultBuildItem.owned()
-                .name(FEATURE_NAME)
+                .feature(FEATURE_NAME)
                 .serviceName(DEV_SERVICE_NAME)
                 .serviceConfig(config)
                 .startable(() -> new WireMockStartable(config))
