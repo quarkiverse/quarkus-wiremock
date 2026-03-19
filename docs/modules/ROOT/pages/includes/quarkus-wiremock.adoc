@@ -7,7 +7,7 @@ h|[.header-title]##Configuration property##
 h|Type
 h|Default
 
-a|icon:lock[title=Fixed at build time] [[quarkus-wiremock_quarkus-wiremock-devservices-enabled]] [.property-path]##link:#quarkus-wiremock_quarkus-wiremock-devservices-enabled[`quarkus.wiremock.devservices.enabled`]##
+a|icon:lock[title=Fixed at build time] [[quarkus-wiremock_quarkus-wiremock-devservices-enabled]] [.property-path]##link:#quarkus-wiremock_quarkus-wiremock-devservices-enabled[`+++quarkus.wiremock.devservices.enabled+++`]##
 ifdef::add-copy-button-to-config-props[]
 config_property_copy_button:+++quarkus.wiremock.devservices.enabled+++[]
 endif::add-copy-button-to-config-props[]
@@ -28,7 +28,7 @@ endif::add-copy-button-to-env-var[]
 |boolean
 |`+++true+++`
 
-a|icon:lock[title=Fixed at build time] [[quarkus-wiremock_quarkus-wiremock-devservices-reload]] [.property-path]##link:#quarkus-wiremock_quarkus-wiremock-devservices-reload[`quarkus.wiremock.devservices.reload`]##
+a|icon:lock[title=Fixed at build time] [[quarkus-wiremock_quarkus-wiremock-devservices-reload]] [.property-path]##link:#quarkus-wiremock_quarkus-wiremock-devservices-reload[`+++quarkus.wiremock.devservices.reload+++`]##
 ifdef::add-copy-button-to-config-props[]
 config_property_copy_button:+++quarkus.wiremock.devservices.reload+++[]
 endif::add-copy-button-to-config-props[]
@@ -49,7 +49,7 @@ endif::add-copy-button-to-env-var[]
 |boolean
 |`+++true+++`
 
-a|icon:lock[title=Fixed at build time] [[quarkus-wiremock_quarkus-wiremock-devservices-port]] [.property-path]##link:#quarkus-wiremock_quarkus-wiremock-devservices-port[`quarkus.wiremock.devservices.port`]##
+a|icon:lock[title=Fixed at build time] [[quarkus-wiremock_quarkus-wiremock-devservices-port]] [.property-path]##link:#quarkus-wiremock_quarkus-wiremock-devservices-port[`+++quarkus.wiremock.devservices.port+++`]##
 ifdef::add-copy-button-to-config-props[]
 config_property_copy_button:+++quarkus.wiremock.devservices.port+++[]
 endif::add-copy-button-to-config-props[]
@@ -72,7 +72,7 @@ endif::add-copy-button-to-env-var[]
 |int
 |
 
-a|icon:lock[title=Fixed at build time] [[quarkus-wiremock_quarkus-wiremock-devservices-files-mapping]] [.property-path]##link:#quarkus-wiremock_quarkus-wiremock-devservices-files-mapping[`quarkus.wiremock.devservices.files-mapping`]##
+a|icon:lock[title=Fixed at build time] [[quarkus-wiremock_quarkus-wiremock-devservices-files-mapping]] [.property-path]##link:#quarkus-wiremock_quarkus-wiremock-devservices-files-mapping[`+++quarkus.wiremock.devservices.files-mapping+++`]##
 ifdef::add-copy-button-to-config-props[]
 config_property_copy_button:+++quarkus.wiremock.devservices.files-mapping+++[]
 endif::add-copy-button-to-config-props[]
@@ -93,7 +93,7 @@ endif::add-copy-button-to-env-var[]
 |string
 |`+++src/test/resources+++`
 
-a|icon:lock[title=Fixed at build time] [[quarkus-wiremock_quarkus-wiremock-devservices-global-response-templating]] [.property-path]##link:#quarkus-wiremock_quarkus-wiremock-devservices-global-response-templating[`quarkus.wiremock.devservices.global-response-templating`]##
+a|icon:lock[title=Fixed at build time] [[quarkus-wiremock_quarkus-wiremock-devservices-global-response-templating]] [.property-path]##link:#quarkus-wiremock_quarkus-wiremock-devservices-global-response-templating[`+++quarkus.wiremock.devservices.global-response-templating+++`]##
 ifdef::add-copy-button-to-config-props[]
 config_property_copy_button:+++quarkus.wiremock.devservices.global-response-templating+++[]
 endif::add-copy-button-to-config-props[]
@@ -116,7 +116,7 @@ endif::add-copy-button-to-env-var[]
 |boolean
 |`+++false+++`
 
-a|icon:lock[title=Fixed at build time] [[quarkus-wiremock_quarkus-wiremock-devservices-extension-scanning-enabled]] [.property-path]##link:#quarkus-wiremock_quarkus-wiremock-devservices-extension-scanning-enabled[`quarkus.wiremock.devservices.extension-scanning-enabled`]##
+a|icon:lock[title=Fixed at build time] [[quarkus-wiremock_quarkus-wiremock-devservices-extension-scanning-enabled]] [.property-path]##link:#quarkus-wiremock_quarkus-wiremock-devservices-extension-scanning-enabled[`+++quarkus.wiremock.devservices.extension-scanning-enabled+++`]##
 ifdef::add-copy-button-to-config-props[]
 config_property_copy_button:+++quarkus.wiremock.devservices.extension-scanning-enabled+++[]
 endif::add-copy-button-to-config-props[]
