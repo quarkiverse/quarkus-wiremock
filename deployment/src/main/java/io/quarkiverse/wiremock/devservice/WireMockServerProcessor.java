@@ -1,8 +1,8 @@
 package io.quarkiverse.wiremock.devservice;
 
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static io.quarkiverse.wiremock.devservice.WireMockConfigKey.PORT;
 import static java.lang.String.format;
+import static java.lang.String.valueOf;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -18,23 +19,29 @@ import org.jboss.logging.Logger;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.common.ClasspathFileSource;
+import com.github.tomakehurst.wiremock.common.FileSource;
 import com.github.tomakehurst.wiremock.common.Notifier;
+import com.github.tomakehurst.wiremock.common.SingleRootFileSource;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 
 import io.quarkus.arc.deployment.ValidationPhaseBuildItem.ValidationErrorBuildItem;
+import io.quarkus.arc.processor.BuiltinScope;
 import io.quarkus.deployment.IsDevelopment;
+import io.quarkus.deployment.IsLocalDevelopment;
 import io.quarkus.deployment.annotations.BuildProducer;
 import io.quarkus.deployment.annotations.BuildStep;
 import io.quarkus.deployment.annotations.Consume;
-import io.quarkus.deployment.builditem.*;
-import io.quarkus.deployment.builditem.DevServicesResultBuildItem.RunningDevService;
-import io.quarkus.deployment.dev.devservices.ContainerInfo;
-import io.quarkus.deployment.dev.devservices.DevServiceDescriptionBuildItem;
+import io.quarkus.deployment.builditem.DevServicesResultBuildItem;
+import io.quarkus.deployment.builditem.FeatureBuildItem;
+import io.quarkus.deployment.builditem.HotDeploymentWatchedFileBuildItem;
+import io.quarkus.deployment.builditem.Startable;
 import io.quarkus.deployment.dev.devservices.DevServicesConfig;
+import io.quarkus.devui.spi.JsonRPCProvidersBuildItem;
 import io.quarkus.devui.spi.page.CardPageBuildItem;
 import io.quarkus.devui.spi.page.Page;
 import io.quarkus.logging.Log;
 import io.quarkus.runtime.configuration.ConfigurationException;
+import io.quarkus.runtime.util.HashUtil;
 
 class WireMockServerProcessor {
 
@@ -44,7 +51,6 @@ class WireMockServerProcessor {
     private static final String FILES = "__files";
     private static final int MIN_PORT = 1025;
     private static final int MAX_PORT = 65535;
-    static volatile RunningDevService devService;
 
     @BuildStep
     FeatureBuildItem feature() {
@@ -52,11 +58,8 @@ class WireMockServerProcessor {
     }
 
     @BuildStep(onlyIf = { WireMockServerEnabled.class, DevServicesConfig.Enabled.class })
-    DevServicesResultBuildItem setup(LaunchModeBuildItem launchMode, LiveReloadBuildItem liveReload,
-            CuratedApplicationShutdownBuildItem shutdown, WireMockServerBuildTimeConfig config,
+    DevServicesResultBuildItem setup(WireMockServerBuildTimeConfig config,
             BuildProducer<ValidationErrorBuildItem> configErrors) {
-
-        Log.debugf("Quarkus launch mode [%s]", launchMode.getLaunchMode());
 
         if (isPortConfigInvalid(config)) {
             configErrors.produce(new ValidationErrorBuildItem(new ConfigurationException(
@@ -65,24 +68,17 @@ class WireMockServerProcessor {
             return null;
         }
 
-        // register shutdown callback once
-        shutdown.addCloseTask(WireMockServerProcessor::stopWireMockDevService, true);
-
-        if (liveReload.isLiveReload() && config.reload()) {
-            Log.debug("Live reload triggered!");
-            stopWireMockDevService();
-        }
-
-        if (devService == null) {
-            devService = startWireMockDevService(config);
-        }
-        return devService.toBuildItem();
-    }
-
-    @BuildStep(onlyIf = { WireMockServerEnabled.class, DevServicesConfig.Enabled.class })
-    @Consume(DevServicesResultBuildItem.class)
-    DevServiceDescriptionBuildItem renderDevServiceDevUICard() {
-        return new DevServiceDescriptionBuildItem(DEV_SERVICE_NAME, null, (ContainerInfo) null, devService.getConfig());
+        // resolveFileSource must be called here in the build step thread, where the context classloader
+        // has the application archive on its classpath. Calling it inside the lambda would run it in a
+        // ForkJoinPool worker thread whose classloader cannot see classpath resources.
+        final FileSource fileSource = resolveFileSource(config);
+        return DevServicesResultBuildItem.owned()
+                .feature(FEATURE_NAME)
+                .serviceName(DEV_SERVICE_NAME)
+                .serviceConfig(serviceKey(config))
+                .startable(() -> new WireMockStartable(config, fileSource))
+                .configProvider(Map.of(PORT, s -> valueOf(s.getExposedPort())))
+                .build();
     }
 
     @BuildStep(onlyIf = { WireMockServerEnabled.class, DevServicesConfig.Enabled.class, IsDevelopment.class })
@@ -98,56 +94,79 @@ class WireMockServerProcessor {
         }
     }
 
-    @BuildStep(onlyIf = { WireMockServerEnabled.class, DevServicesConfig.Enabled.class, IsDevelopment.class })
+    @BuildStep(onlyIf = { WireMockServerEnabled.class, DevServicesConfig.Enabled.class, IsLocalDevelopment.class })
+    public JsonRPCProvidersBuildItem createJsonRPCService() {
+        return new JsonRPCProvidersBuildItem(WireMockRCPService.class, BuiltinScope.SINGLETON.getName());
+    }
+
+    @BuildStep(onlyIf = { WireMockServerEnabled.class, DevServicesConfig.Enabled.class, IsLocalDevelopment.class })
     @Consume(DevServicesResultBuildItem.class)
     public CardPageBuildItem pages() {
-
         CardPageBuildItem cardPageBuildItem = new CardPageBuildItem();
-        String wiremockUrl = "http://localhost:" + devService.getConfig().get(PORT);
-        String mappingsUrl = wiremockUrl + "/__admin/mappings";
-
         cardPageBuildItem.addPage(Page.externalPageBuilder("Mappings")
-                .url(mappingsUrl, mappingsUrl)
+                .dynamicUrlJsonRPCMethodName("getMappingsUrl")
                 .doNotEmbed()
                 .icon("font-awesome-solid:file-code"));
-
         cardPageBuildItem.addLibraryVersion("org.wiremock", "wiremock-standalone", "WireMock", "https://wiremock.org/");
-
         return cardPageBuildItem;
     }
 
-    private static RunningDevService startWireMockDevService(WireMockServerBuildTimeConfig config) {
+    public static class WireMockStartable implements Startable {
 
-        final WireMockConfiguration configuration = options().globalTemplating(config.globalResponseTemplating())
-                .extensionScanningEnabled(config.extensionScanningEnabled()).notifier(new JBossNotifier());
-        config.port().ifPresentOrElse(configuration::port, configuration::dynamicPort);
+        private WireMockServer server;
 
-        if (config.isClasspathFilesMapping()) {
-            configuration.fileSource(new ClasspathFileSource(Thread.currentThread().getContextClassLoader(),
-                    config.effectiveFileMapping()));
-        } else {
-            configuration.usingFilesUnderDirectory(config.effectiveFileMapping());
+        private final WireMockServerBuildTimeConfig config;
+        private final FileSource fileSource;
+
+        public WireMockStartable(WireMockServerBuildTimeConfig config, FileSource fileSource) {
+            this.config = config;
+            this.fileSource = fileSource;
         }
 
-        final WireMockServer server = new WireMockServer(configuration);
-        server.start();
-        Log.debugf("WireMock server listening on port [%s]", server.port());
+        @Override
+        public void start() {
+            final WireMockConfiguration configuration = WireMockConfiguration.options()
+                    .globalTemplating(config.globalResponseTemplating())
+                    .extensionScanningEnabled(config.extensionScanningEnabled())
+                    .notifier(new JBossNotifier())
+                    .fileSource(fileSource);
+            config.port().ifPresentOrElse(configuration::port, configuration::dynamicPort);
 
-        return new RunningDevService(DEV_SERVICE_NAME, null, server::shutdown, PORT, String.valueOf(server.port()));
+            server = new WireMockServer(configuration);
+
+            server.start();
+            Log.debugf("WireMock server listening on port [%s]", server.port());
+        }
+
+        public int getExposedPort() {
+            return server.port();
+        }
+
+        @Override
+        public String getConnectionInfo() {
+            return server.baseUrl();
+        }
+
+        @Override
+        public String getContainerId() {
+            return null;
+        }
+
+        @Override
+        public void close() {
+            if (server != null) {
+                Log.debugf("Stopping WireMock server running on port [%s]", server.port());
+                server.stop();
+            }
+        }
     }
 
-    private static synchronized void stopWireMockDevService() {
-        try {
-            if (devService != null) {
-                Log.debugf("Stopping WireMock server running on port %s", devService.getConfig().get(PORT));
-                devService.close();
-            }
-        } catch (IOException e) {
-            Log.error("Failed to stop WireMock server", e);
-            throw new UncheckedIOException(e);
-        } finally {
-            devService = null;
+    private static FileSource resolveFileSource(WireMockServerBuildTimeConfig config) {
+        if (config.isClasspathFilesMapping()) {
+            return new ClasspathFileSource(Thread.currentThread().getContextClassLoader(),
+                    config.effectiveFileMapping());
         }
+        return new SingleRootFileSource(config.effectiveFileMapping());
     }
 
     private static boolean isPortConfigInvalid(WireMockServerBuildTimeConfig config) {
@@ -170,6 +189,40 @@ class WireMockServerProcessor {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
+    }
+
+    /**
+     * Builds a deterministic service key from the config values plus a SHA-256 hash of all mapping file contents.
+     * The dev services framework uses this to decide whether to restart WireMock: if the key is identical to the
+     * previous build, the running instance is reused; if it differs (config changed or any file was modified), the
+     * instance is stopped and a fresh one is started.
+     * <p>
+     * For classpath mode, file changes always trigger a full rebuild (not a hot reload), so the service is restarted
+     * regardless. Including a file hash for classpath resources is therefore unnecessary.
+     */
+    private static String serviceKey(WireMockServerBuildTimeConfig config) {
+        return config.reload() + "|" + config.port() + "|" + config.filesMapping() + "|"
+                + config.globalResponseTemplating() + "|" + config.extensionScanningEnabled() + "|"
+                + (config.reload() ? filesHash(config) : "");
+    }
+
+    private static String filesHash(WireMockServerBuildTimeConfig config) {
+        if (config.isClasspathFilesMapping()) {
+            return "";
+        }
+        String combined = listFiles(
+                Paths.get(config.effectiveFileMapping(), MAPPINGS),
+                Paths.get(config.effectiveFileMapping(), FILES))
+                .stream().sorted()
+                .map(file -> {
+                    try {
+                        return file + ":" + HashUtil.sha256(Files.readAllBytes(Path.of(file)));
+                    } catch (IOException e) {
+                        throw new UncheckedIOException(e);
+                    }
+                })
+                .collect(Collectors.joining("|"));
+        return HashUtil.sha256(combined);
     }
 
     private static class JBossNotifier implements Notifier {
