@@ -16,5 +16,5 @@ metadata:
   categories:
     - "miscellaneous"
     - "testing"
-  status: "preview"
+  status: "stable"
   icon-url: "https://raw.githubusercontent.com/quarkiverse/quarkus-wiremock/refs/heads/main/docs/modules/ROOT/assets/images/wiremock.svg"
