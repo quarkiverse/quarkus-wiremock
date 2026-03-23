@@ -36,7 +36,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest]
+        os: [ ubuntu-latest ]
         java: [
           { 'version': '17' },
           { 'version': '21' },
@@ -57,4 +57,4 @@ jobs:
           cache: 'maven'
 
       - name: Build with Maven
-        run: mvn -B clean verify -Dno-format
+        run: ./mvnw -B clean verify -Dno-format
