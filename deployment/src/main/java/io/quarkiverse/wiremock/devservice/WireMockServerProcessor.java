@@ -25,7 +25,6 @@ import com.github.tomakehurst.wiremock.common.SingleRootFileSource;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 
 import io.quarkus.arc.deployment.ValidationPhaseBuildItem.ValidationErrorBuildItem;
-import io.quarkus.arc.processor.BuiltinScope;
 import io.quarkus.deployment.IsDevelopment;
 import io.quarkus.deployment.IsLocalDevelopment;
 import io.quarkus.deployment.annotations.BuildProducer;
@@ -36,7 +35,6 @@ import io.quarkus.deployment.builditem.FeatureBuildItem;
 import io.quarkus.deployment.builditem.HotDeploymentWatchedFileBuildItem;
 import io.quarkus.deployment.builditem.Startable;
 import io.quarkus.deployment.dev.devservices.DevServicesConfig;
-import io.quarkus.devui.spi.JsonRPCProvidersBuildItem;
 import io.quarkus.devui.spi.page.CardPageBuildItem;
 import io.quarkus.devui.spi.page.Page;
 import io.quarkus.logging.Log;
@@ -47,6 +45,7 @@ class WireMockServerProcessor {
 
     private static final String FEATURE_NAME = "wiremock";
     private static final String DEV_SERVICE_NAME = "WireMock";
+    private static final String MAPPINGS_URL = "wiremock.devservices.mappings-url";
     private static final String MAPPINGS = "mappings";
     private static final String FILES = "__files";
     private static final int MIN_PORT = 1025;
@@ -77,7 +76,8 @@ class WireMockServerProcessor {
                 .serviceName(DEV_SERVICE_NAME)
                 .serviceConfig(serviceKey(config))
                 .startable(() -> new WireMockStartable(config, fileSource))
-                .configProvider(Map.of(PORT, s -> valueOf(s.getExposedPort())))
+                .configProvider(Map.of(PORT, s -> valueOf(s.getExposedPort()), MAPPINGS_URL,
+                        s -> "http://localhost:" + s.getExposedPort() + "/__admin/mappings"))
                 .build();
     }
 
@@ -95,16 +95,12 @@ class WireMockServerProcessor {
     }
 
     @BuildStep(onlyIf = { WireMockServerEnabled.class, DevServicesConfig.Enabled.class, IsLocalDevelopment.class })
-    public JsonRPCProvidersBuildItem createJsonRPCService() {
-        return new JsonRPCProvidersBuildItem(WireMockRCPService.class, BuiltinScope.SINGLETON.getName());
-    }
-
-    @BuildStep(onlyIf = { WireMockServerEnabled.class, DevServicesConfig.Enabled.class, IsLocalDevelopment.class })
     @Consume(DevServicesResultBuildItem.class)
     public CardPageBuildItem pages() {
         CardPageBuildItem cardPageBuildItem = new CardPageBuildItem();
         cardPageBuildItem.addPage(Page.externalPageBuilder("Mappings")
-                .dynamicUrlJsonRPCMethodName("getMappingsUrl")
+                .dynamicUrlJsonRPCMethodName("devui-dev-services:devServicesConfig",
+                        Map.of("name", FEATURE_NAME, "configKey", MAPPINGS_URL))
                 .doNotEmbed()
                 .icon("font-awesome-solid:file-code"));
         cardPageBuildItem.addLibraryVersion("org.wiremock", "wiremock-standalone", "WireMock", "https://wiremock.org/");
