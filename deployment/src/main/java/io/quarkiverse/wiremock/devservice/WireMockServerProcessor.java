@@ -76,8 +76,9 @@ class WireMockServerProcessor {
                 .serviceName(DEV_SERVICE_NAME)
                 .serviceConfig(serviceKey(config))
                 .startable(() -> new WireMockStartable(config, fileSource))
-                .configProvider(Map.of(PORT, s -> valueOf(s.getExposedPort()), MAPPINGS_URL,
-                        s -> "http://localhost:" + s.getExposedPort() + "/__admin/mappings"))
+                .configProvider(Map.of(
+                        PORT, s -> valueOf(s.getExposedPort()),
+                        MAPPINGS_URL, s -> s.getConnectionInfo() + "/__admin/mappings"))
                 .build();
     }
 
