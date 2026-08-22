@@ -1,6 +1,7 @@
 package io.quarkiverse.wiremock.devservice;
 
 import static io.quarkiverse.wiremock.devservice.WireMockConfigKey.PORT;
+import static java.lang.String.format;
 
 import java.util.Collections;
 import java.util.Map;
@@ -14,13 +15,28 @@ import io.quarkus.test.common.QuarkusTestResourceConfigurableLifecycleManager;
 public class WireMockServerConnector
         implements QuarkusTestResourceConfigurableLifecycleManager<ConnectWireMock>, DevServicesContext.ContextAware {
 
+    private static final String REST_CLIENT_URL_PROPERTY = "quarkus.rest-client.%s.url";
+
     WireMock wiremock;
+
+    private String restClient = "";
+    private String baseUrl;
+
+    @Override
+    public void init(ConnectWireMock annotation) {
+        restClient = annotation.restClient();
+    }
 
     @Override
     public Map<String, String> start() {
-        // nothing to do, since the Dev Service has already started the server
-        // and the Dev Service configuration will be propagated by Quarkus automatically.
-        return Collections.emptyMap();
+        // the WireMock server itself is already started by the Dev Service, and its configuration is
+        // propagated by Quarkus automatically; here we only need to redirect the requested REST client, if any.
+        if (restClient.isBlank()) {
+            return Collections.emptyMap();
+        }
+        String property = format(REST_CLIENT_URL_PROPERTY, restClient);
+        Log.debugf("Redirecting REST client [%s] to WireMock via [%s=%s]", restClient, property, baseUrl);
+        return Map.of(property, baseUrl);
     }
 
     @Override
@@ -38,6 +54,7 @@ public class WireMockServerConnector
         final Map<String, String> devContext = context.devServicesProperties();
         try {
             int port = Integer.parseInt(devContext.get(PORT));
+            baseUrl = "http://localhost:" + port;
             wiremock = new WireMock(port);
             WireMock.configureFor(port);
             wiremock.getGlobalSettings(); // establish a connection to WireMock server eagerly

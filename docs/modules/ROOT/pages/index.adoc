@@ -34,6 +34,8 @@ quarkus.wiremock.devservices.global-response-templating=false
 
 IMPORTANT: Due to its build time nature is totally fine that Quarkus prints `unrecognized configuration key` warnings when executing integration tests.
 
+TIP: Starting the WireMock `Dev Service` doesn't automatically redirect your `@RestClient` calls to it; see xref:redirecting-rest-clients-to-wiremock[Redirecting REST Clients to WireMock] below.
+
 == Testing
 
 === Stubbing & Verifying
@@ -76,6 +78,60 @@ class WireMockDevServiceResourceTest {
 ----
 
 TIP: For more details please refer to the WireMock https://wiremock.org/docs/stubbing/[Stubbing & Verifying] docs.
+
+=== Redirecting REST Clients to WireMock
+
+By default, starting the `WireMock` server does *not* rewire your application's outgoing calls to go through it.
+If you're using a MicroProfile/Quarkus `@RestClient`, you still need to point its base URL at the WireMock `Dev Service` for your requests to actually reach it and match your stubs.
+
+The easiest way is to set the `restClient` attribute of `@ConnectWireMock`:
+
+[source,java]
+----
+@QuarkusTest
+@ConnectWireMock(restClient = "my-api") // <1>
+class WireMockDevServiceResourceTest {
+
+    private static final String MOCK_MSG = "Hello from WireMock!";
+
+    WireMock wiremock;
+
+    @RestClient
+    MyApiClient myApiClient; // <2>
+
+    @Test
+    void testHelloEndpoint() {
+        wiremock.register(get(urlEqualTo("/mock-me"))
+            .willReturn(aResponse().withStatus(200).withBody(MOCK_MSG)));
+
+        assertEquals(MOCK_MSG, myApiClient.hello()); // <3>
+    }
+
+}
+----
+<1> `my-api` must match the configured name of your REST client (i.e. as used in `quarkus.rest-client.my-api.url`, or the client's `@RegisterRestClient(configKey = "my-api")`).
+<2> No manual configuration needed: the client's base URL is redirected to WireMock automatically for the duration of the test.
+<3> Requests now reach WireMock instead of the real downstream API, so your registered stubs get matched.
+
+`restClient` is left empty by default, since an application can have multiple REST clients and only some of them may need to be redirected to WireMock in a given test.
+`@ConnectWireMock` is repeatable, so redirect more than one REST client by repeating it:
+
+[source,java]
+----
+@QuarkusTest
+@ConnectWireMock(restClient = "my-api")
+@ConnectWireMock(restClient = "my-other-api")
+class WireMockDevServiceResourceTest {
+    ...
+}
+----
+
+If you'd rather configure this yourself (e.g. you need more control, or you're not using `@ConnectWireMock`), you can set the client's URL manually, typically in a test-only properties file (e.g. `src/test/resources/application.properties`):
+
+[source,properties]
+----
+quarkus.rest-client.my-api.url=http://localhost:${quarkus.wiremock.devservices.port}
+----
 
 === Configuration retrieval
 
