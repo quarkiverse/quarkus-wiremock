@@ -34,7 +34,7 @@ quarkus.wiremock.devservices.global-response-templating=false
 
 IMPORTANT: Due to its build time nature is totally fine that Quarkus prints `unrecognized configuration key` warnings when executing integration tests.
 
-TIP: Starting the WireMock `Dev Service` doesn't automatically redirect your `@RestClient` calls to it; see xref:_redirecting_rest_clients_to_wiremock[Redirecting REST Clients to WireMock] below.
+TIP: Starting the WireMock `Dev Service` doesn't automatically redirect your `@RestClient` calls to it; see xref:redirecting-rest-clients-to-wiremock[Redirecting REST Clients to WireMock] below.
 
 == Testing
 
@@ -104,7 +104,7 @@ class WireMockDevServiceResourceTest {
         wiremock.register(get(urlEqualTo("/mock-me"))
             .willReturn(aResponse().withStatus(200).withBody(MOCK_MSG)));
 
-        assertEquals(MOCK_MSG, myApiClient.hello()); // <3> gets routed to WireMock automatically
+        assertEquals(MOCK_MSG, myApiClient.hello()); // <3>
     }
 
 }
