@@ -1,6 +1,7 @@
 package io.quarkiverse.wiremock.devservice;
 
 import static io.quarkiverse.wiremock.devservice.WireMockConfigKey.PORT;
+import static io.quarkiverse.wiremock.devservice.WireMockConfigKey.URL;
 import static java.lang.String.format;
 
 import java.util.Collections;
@@ -54,7 +55,9 @@ public class WireMockServerConnector
         final Map<String, String> devContext = context.devServicesProperties();
         try {
             int port = Integer.parseInt(devContext.get(PORT));
-            baseUrl = "http://localhost:" + port;
+            // the application under test may run in a container, so the REST client has to use the published URL,
+            // whereas the test itself always runs on the host and can reach WireMock via localhost
+            baseUrl = devContext.getOrDefault(URL, "http://localhost:" + port);
             wiremock = new WireMock(port);
             WireMock.configureFor(port);
             wiremock.getGlobalSettings(); // establish a connection to WireMock server eagerly
