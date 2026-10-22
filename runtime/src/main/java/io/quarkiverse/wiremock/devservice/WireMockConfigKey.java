@@ -7,6 +7,8 @@ public class WireMockConfigKey {
     static final String PREFIX = "quarkus.wiremock.devservices"; // adheres to Quarkus Dev Service naming conventions
 
     public static final String PORT = PREFIX + ".port";
+    public static final String HOST = PREFIX + ".host";
+    public static final String URL = PREFIX + ".url";
     public static final String RELOAD = PREFIX + ".reload";
     public static final String FILES_MAPPING = PREFIX + ".files-mapping";
     public static final String GLOBAL_RESPONSE_TEMPLATING = PREFIX + ".global-response-templating";
