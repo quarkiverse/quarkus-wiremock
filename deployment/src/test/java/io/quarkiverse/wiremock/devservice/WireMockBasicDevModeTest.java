@@ -2,6 +2,7 @@ package io.quarkiverse.wiremock.devservice;
 
 import static io.quarkiverse.wiremock.devservice.ConfigProviderResource.BASE_URL;
 import static io.quarkiverse.wiremock.devservice.WireMockConfigKey.PORT;
+import static io.quarkiverse.wiremock.devservice.WireMockConfigKey.URL;
 import static java.lang.String.format;
 import static org.hamcrest.Matchers.is;
 import static org.jboss.resteasy.reactive.RestResponse.StatusCode.OK;
@@ -29,5 +30,12 @@ public class WireMockBasicDevModeTest {
         String port = RestAssured.get(format("%s/config?propertyName=%s", BASE_URL, PORT)).then().extract().asString();
         RestAssured.when().get(format("http://localhost:%s/basic", port)).then().statusCode(OK)
                 .body(is("Everything was just fine!"));
+    }
+
+    @Test
+    void testUrlPropagation() {
+        String port = RestAssured.get(format("%s/config?propertyName=%s", BASE_URL, PORT)).then().extract().asString();
+        RestAssured.get(format("%s/config?propertyName=%s", BASE_URL, URL)).then().statusCode(OK)
+                .body(is("http://localhost:" + port));
     }
 }

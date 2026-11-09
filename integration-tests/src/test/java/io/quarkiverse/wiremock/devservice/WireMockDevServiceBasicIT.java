@@ -3,7 +3,9 @@ package io.quarkiverse.wiremock.devservice;
 import static com.github.tomakehurst.wiremock.client.WireMock.anyRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.anyUrl;
 import static io.quarkiverse.wiremock.devservice.WireMockConfigKey.FILES_MAPPING;
+import static io.quarkiverse.wiremock.devservice.WireMockConfigKey.HOST;
 import static io.quarkiverse.wiremock.devservice.WireMockConfigKey.PORT;
+import static io.quarkiverse.wiremock.devservice.WireMockConfigKey.URL;
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -11,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 import org.eclipse.microprofile.config.ConfigProvider;
@@ -57,6 +60,13 @@ class WireMockDevServiceBasicIT {
     void testConfigValuePropagationIsConsistent() {
         assertEquals(ConfigProvider.getConfig().getValue(PORT, Integer.class),
                 Integer.parseInt(devServicesContext.devServicesProperties().get(PORT)));
+    }
+
+    @Test
+    void testUrlPropagation() {
+        // the host is `localhost`, or the container runtime's host alias if the application runs in a container
+        Map<String, String> properties = devServicesContext.devServicesProperties();
+        assertEquals("http://" + properties.get(HOST) + ":" + properties.get(PORT), properties.get(URL));
     }
 
     @Test
