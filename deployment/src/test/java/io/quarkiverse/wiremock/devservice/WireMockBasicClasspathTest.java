@@ -10,7 +10,7 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-import io.quarkus.test.QuarkusUnitTest;
+import io.quarkus.test.QuarkusExtensionTest;
 import io.restassured.RestAssured;
 
 /**
@@ -22,7 +22,7 @@ class WireMockBasicClasspathTest {
     private static final String APP_PROPERTIES = "application-basic-classpath.properties";
 
     @RegisterExtension
-    static final QuarkusUnitTest UNIT_TEST = new QuarkusUnitTest().withConfigurationResource(APP_PROPERTIES)
+    static final QuarkusExtensionTest UNIT_TEST = new QuarkusExtensionTest().withConfigurationResource(APP_PROPERTIES)
             .setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class)
                     .addAsResource("other/mappings/basic-cp.json"));
 
