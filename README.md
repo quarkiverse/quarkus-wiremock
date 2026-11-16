@@ -6,7 +6,7 @@
 <br>
 
 [![GitHub Actions Status](https://img.shields.io/github/actions/workflow/status/quarkiverse/quarkus-wiremock/build.yml?branch=main&logo=GitHub&style=for-the-badge)](https://github.com/quarkiverse/quarkus-wiremock/actions/workflows/build.yml)
-[![Supported JVM Versions](https://img.shields.io/badge/JVM-17--25-brightgreen.svg?style=for-the-badge&logo=openjdk)](https://github.com/quarkiverse/quarkus-wiremock/actions/workflows/build.yml)
+[![Supported JVM Versions](https://img.shields.io/badge/JVM-21--25-brightgreen.svg?style=for-the-badge&logo=openjdk)](https://github.com/quarkiverse/quarkus-wiremock/actions/workflows/build.yml)
 [![Version](https://img.shields.io/maven-central/v/io.quarkiverse.wiremock/quarkus-wiremock-parent?logo=apache-maven&style=for-the-badge)](https://search.maven.org/search?q=g:io.quarkiverse.wiremock%20AND%20a:quarkus-wiremock-parent)
 [![License](https://img.shields.io/github/license/quarkusio/quarkus?style=for-the-badge&logo=apache)](https://www.apache.org/licenses/LICENSE-2.0)
 
@@ -25,6 +25,7 @@ However, it's most likely that this extension will work with the latest and grea
 
 | Quarkus WireMock | WireMock | Quarkus Platform | Documentation                                                                                      |
 |------------------|----------|------------------|----------------------------------------------------------------------------------------------------|
+| 2.x.x            | 3.x      | 4.0.x            | [Quarkiverse Docs](https://quarkiverse.github.io/quarkiverse-docs/quarkus-wiremock/dev/index.html) |
 | 1.x.x            | 3.x      | 3.40.x (LTS)     | [Quarkiverse Docs](https://quarkiverse.github.io/quarkiverse-docs/quarkus-wiremock/dev/index.html) |
 
 ## 🚀 Quarkus WireMock Extension in Action

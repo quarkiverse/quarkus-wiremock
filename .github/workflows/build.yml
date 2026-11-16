@@ -42,7 +42,6 @@ jobs:
       matrix:
         os: [ ubuntu-latest ]
         java: [
-          { 'version': '17' },
           { 'version': '21' },
           { 'version': '25' },
         ]

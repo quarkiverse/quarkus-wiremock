@@ -7,14 +7,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import io.quarkus.runtime.configuration.ConfigurationException;
-import io.quarkus.test.QuarkusUnitTest;
+import io.quarkus.test.QuarkusExtensionTest;
 
 class WireMockInvalidPortTest {
 
     private static final String APP_PROPERTIES = "application-invalid-port.properties";
 
     @RegisterExtension
-    static final QuarkusUnitTest UNIT_TEST = new QuarkusUnitTest().setExpectedException(ConfigurationException.class)
+    static final QuarkusExtensionTest UNIT_TEST = new QuarkusExtensionTest().setExpectedException(ConfigurationException.class)
             .withConfigurationResource(APP_PROPERTIES).setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class));
 
     @Test

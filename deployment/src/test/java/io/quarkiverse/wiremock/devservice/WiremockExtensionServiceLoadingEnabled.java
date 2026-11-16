@@ -10,7 +10,7 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-import io.quarkus.test.QuarkusUnitTest;
+import io.quarkus.test.QuarkusExtensionTest;
 import io.restassured.RestAssured;
 
 public class WiremockExtensionServiceLoadingEnabled {
@@ -18,7 +18,7 @@ public class WiremockExtensionServiceLoadingEnabled {
     private static final String APP_PROPERTIES = "application-extension-loading-enabled.properties";
 
     @RegisterExtension
-    static final QuarkusUnitTest UNIT_TEST = new QuarkusUnitTest().withConfigurationResource(APP_PROPERTIES)
+    static final QuarkusExtensionTest UNIT_TEST = new QuarkusExtensionTest().withConfigurationResource(APP_PROPERTIES)
             .setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class)
                     .addClass(CustomTransformer.class)
                     .addAsResource("META-INF/services/com.github.tomakehurst.wiremock.extension.Extension"));
