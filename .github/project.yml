@@ -1,4 +1,6 @@
 release:
-  current-version: "1.8.1"
+  current-version: "2.0.0.CR1"
   next-version: "999-SNAPSHOT"
+  pre-release: true
+  latest: false
 
