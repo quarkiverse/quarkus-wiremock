@@ -1,6 +1,8 @@
 package io.quarkiverse.wiremock.devservice;
 
+import static io.quarkiverse.wiremock.devservice.WireMockConfigKey.HOST;
 import static io.quarkiverse.wiremock.devservice.WireMockConfigKey.PORT;
+import static io.quarkiverse.wiremock.devservice.WireMockConfigKey.URL;
 import static java.lang.String.format;
 import static java.lang.String.valueOf;
 
@@ -10,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -31,10 +34,13 @@ import io.quarkus.deployment.annotations.BuildProducer;
 import io.quarkus.deployment.annotations.BuildStep;
 import io.quarkus.deployment.annotations.Consume;
 import io.quarkus.deployment.builditem.DevServicesResultBuildItem;
+import io.quarkus.deployment.builditem.DevServicesSharedNetworkBuildItem;
 import io.quarkus.deployment.builditem.FeatureBuildItem;
 import io.quarkus.deployment.builditem.HotDeploymentWatchedFileBuildItem;
 import io.quarkus.deployment.builditem.Startable;
 import io.quarkus.deployment.dev.devservices.DevServicesConfig;
+import io.quarkus.deployment.util.ContainerRuntimeUtil;
+import io.quarkus.deployment.util.ContainerRuntimeUtil.ContainerRuntime;
 import io.quarkus.devui.spi.page.CardPageBuildItem;
 import io.quarkus.devui.spi.page.Page;
 import io.quarkus.logging.Log;
@@ -50,6 +56,11 @@ class WireMockServerProcessor {
     private static final String FILES = "__files";
     private static final int MIN_PORT = 1025;
     private static final int MAX_PORT = 65535;
+    private static final String LOCALHOST = "localhost";
+    private static final String DOCKER_HOST_GATEWAY = "host.docker.internal";
+    private static final String PODMAN_HOST_GATEWAY = "host.containers.internal";
+    // source of the shared network build item that Quarkus produces when the application under test runs in a container
+    private static final String CONTAINERIZED_APP_SOURCE = "io.quarkus.test.junit";
 
     @BuildStep
     FeatureBuildItem feature() {
@@ -58,6 +69,7 @@ class WireMockServerProcessor {
 
     @BuildStep(onlyIf = { WireMockServerEnabled.class, DevServicesConfig.Enabled.class })
     DevServicesResultBuildItem setup(WireMockServerBuildTimeConfig config,
+            List<DevServicesSharedNetworkBuildItem> sharedNetwork,
             BuildProducer<ValidationErrorBuildItem> configErrors) {
 
         if (isPortConfigInvalid(config)) {
@@ -71,6 +83,7 @@ class WireMockServerProcessor {
         // has the application archive on its classpath. Calling it inside the lambda would run it in a
         // ForkJoinPool worker thread whose classloader cannot see classpath resources.
         final FileSource fileSource = resolveFileSource(config);
+        final String host = resolveHost(sharedNetwork);
         return DevServicesResultBuildItem.owned()
                 .feature(FEATURE_NAME)
                 .serviceName(DEV_SERVICE_NAME)
@@ -78,6 +91,8 @@ class WireMockServerProcessor {
                 .startable(() -> new WireMockStartable(config, fileSource))
                 .configProvider(Map.of(
                         PORT, s -> valueOf(s.getExposedPort()),
+                        HOST, s -> host,
+                        URL, s -> format("http://%s:%d", host, s.getExposedPort()),
                         MAPPINGS_URL, s -> s.getConnectionInfo() + "/__admin/mappings"))
                 .build();
     }
@@ -164,6 +179,24 @@ class WireMockServerProcessor {
                     config.effectiveFileMapping());
         }
         return new SingleRootFileSource(config.effectiveFileMapping());
+    }
+
+    /**
+     * The WireMock server runs inside the JVM on the host. If the application under test runs in a container (e.g.
+     * {@code @QuarkusIntegrationTest} with {@code quarkus.container-image.build=true}), {@code localhost} refers to the
+     * container itself, so the host has to be reached through the gateway alias provided by the container runtime.
+     * <p>
+     * {@link DevServicesSharedNetworkBuildItem#isSharedNetworkRequired} is deliberately not used here, because it is also
+     * true for {@code quarkus.devservices.launch-on-shared-network}, where the application itself still runs on the host.
+     */
+    private static String resolveHost(List<DevServicesSharedNetworkBuildItem> sharedNetwork) {
+        if (sharedNetwork.stream().noneMatch(item -> CONTAINERIZED_APP_SOURCE.equals(item.getSource()))) {
+            return LOCALHOST;
+        }
+        final ContainerRuntime runtime = ContainerRuntimeUtil.detectContainerRuntime(false, true);
+        final String host = runtime.isPodman() ? PODMAN_HOST_GATEWAY : DOCKER_HOST_GATEWAY;
+        Log.debugf("Application runs on a shared network (container runtime [%s]), using host [%s]", runtime, host);
+        return host;
     }
 
     private static boolean isPortConfigInvalid(WireMockServerBuildTimeConfig config) {

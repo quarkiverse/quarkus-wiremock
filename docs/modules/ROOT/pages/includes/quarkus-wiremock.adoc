@@ -137,5 +137,47 @@ endif::add-copy-button-to-env-var[]
 |boolean
 |`+++false+++`
 
+a| [[quarkus-wiremock_quarkus-wiremock-devservices-host]] [.property-path]##link:#quarkus-wiremock_quarkus-wiremock-devservices-host[`+++quarkus.wiremock.devservices.host+++`]##
+ifdef::add-copy-button-to-config-props[]
+config_property_copy_button:+++quarkus.wiremock.devservices.host+++[]
+endif::add-copy-button-to-config-props[]
+
+
+[.description]
+--
+Host name under which the application can reach the WireMock server. This is `localhost`, unless the application runs in a container during integration tests, in which case the host alias of the container runtime is used (`host.docker.internal` or `host.containers.internal`).
+
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_WIREMOCK_DEVSERVICES_HOST+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++QUARKUS_WIREMOCK_DEVSERVICES_HOST+++`
+endif::add-copy-button-to-env-var[]
+--
+|string
+|
+
+a| [[quarkus-wiremock_quarkus-wiremock-devservices-url]] [.property-path]##link:#quarkus-wiremock_quarkus-wiremock-devservices-url[`+++quarkus.wiremock.devservices.url+++`]##
+ifdef::add-copy-button-to-config-props[]
+config_property_copy_button:+++quarkus.wiremock.devservices.url+++[]
+endif::add-copy-button-to-config-props[]
+
+
+[.description]
+--
+Base URL under which the application can reach the WireMock server, e.g. `http://localhost:8089`.
+
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_WIREMOCK_DEVSERVICES_URL+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++QUARKUS_WIREMOCK_DEVSERVICES_URL+++`
+endif::add-copy-button-to-env-var[]
+--
+|string
+|
+
 |===
 

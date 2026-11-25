@@ -130,8 +130,39 @@ If you'd rather configure this yourself (e.g. you need more control, or you're n
 
 [source,properties]
 ----
-quarkus.rest-client.my-api.url=http://localhost:${quarkus.wiremock.devservices.port}
+quarkus.rest-client.my-api.url=${quarkus.wiremock.devservices.url}
 ----
+
+TIP: Prefer `quarkus.wiremock.devservices.url` over building the URL yourself from `http://localhost:${quarkus.wiremock.devservices.port}`.
+The `url` always points to a location the application under test can reach, which is not necessarily `localhost`, see xref:containerized-integration-tests[Containerized Integration Tests] below.
+
+[[containerized-integration-tests]]
+=== Containerized Integration Tests
+
+The WireMock `Dev Service` runs inside the JVM on your host.
+When a `@QuarkusIntegrationTest` runs the application as a container image (e.g. `-Dquarkus.container-image.build=true`), `localhost` inside that container refers to the container itself.
+In that case the extension publishes the host alias of the container runtime instead:
+
+[cols="1,1"]
+|===
+|Property |Value
+
+|`quarkus.wiremock.devservices.host`
+|`localhost`, or `host.docker.internal` (Docker) / `host.containers.internal` (Podman) when the application runs in a container
+
+|`quarkus.wiremock.devservices.url`
+|`http://<host>:<port>`
+
+|`quarkus.wiremock.devservices.port`
+|the port WireMock is listening on
+|===
+
+Both `@ConnectWireMock(restClient = "...")` and `quarkus.rest-client.my-api.url=${quarkus.wiremock.devservices.url}` use this URL, so the same tests work with and without a container image.
+The injected `WireMock` client itself always connects via `localhost`, since the test runs on the host.
+
+IMPORTANT: Docker Engine on Linux does not provide `host.docker.internal` by default.
+Add it to the application container with `quarkus.test.arg-line=--add-host=host.docker.internal:host-gateway` (e.g. as a system property of the `maven-failsafe-plugin`).
+Docker Desktop and Podman provide the alias out of the box.
 
 === Configuration retrieval
 
@@ -187,7 +218,7 @@ Further more this extension supports the configuration capabilities of Quarkus. 
 within your custom properties via variable interpolation.
 [source,properties]
 ----
-custom.config.wiremock.url=http://localhost:${quarkus.wiremock.devservices.port}/mock-me
+custom.config.wiremock.url=${quarkus.wiremock.devservices.url}/mock-me
 ----
 
 TIP: Please refer to https://quarkus.io/guides/config-reference#property-expressions[Property Expressions] for further details.
