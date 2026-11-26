@@ -1,6 +1,5 @@
 release:
-  current-version: "2.0.0.CR1"
+  current-version: "2.0.0"
   next-version: "999-SNAPSHOT"
-  pre-release: true
-  latest: false
-
+  pre-release: false
+  latest: true
